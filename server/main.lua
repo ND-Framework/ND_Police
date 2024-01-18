@@ -221,46 +221,6 @@ RegisterServerEvent('updateSentence',function(sentence, target)
 
 end)
 
----@param fine string
----@param id string
----@param message string
-RegisterServerEvent("confirmation",function(fine, id, message)
-    local target = id
-    TriggerClientEvent("sendConfirm", id, fine, src, message)
-end)
-
----@param officer string
-RegisterServerEvent("refusedFine", function(officer)
-    local src = source
-    TriggerClientEvent('ox_lib:notify', officer, {
-        type = 'error',
-        description = 'Fine has been refused.',
-    })
-    TriggerClientEvent('ox_lib:notify', src, {
-        type = 'error',
-        description = 'You have refused the fine.',
-    })
-end)
-
----@param fine string
----@param officer string
----@param message string
-RegisterServerEvent("acceptedFine", function(fine, officer, message)
-    local src = source 
-    local officerName = ND.GetPlayer(officer)
-    local playerName = ND.GetPlayer(src)
-    exports.pefcl:createInvoice(src, {from = officerName.name, toIdentifier = src, to = playerName.name, fromIdentifier = officer, amount = fine, message = message, src,})
-    TriggerClientEvent('ox_lib:notify', src, {
-        type = 'success',
-        description = 'Fine Accepted',
-    })
-    TriggerClientEvent('ox_lib:notify', officer, {
-        type = 'success',
-        description = 'Fine Accepted',
-    })
-end)
-
-
 RegisterNetEvent('gsrTest', function(target)
 	local src = source
 	local ply = Player(target)
