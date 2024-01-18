@@ -181,7 +181,7 @@ RegisterServerEvent('server:beginSentence',function(id, sentence, resume)
 	}, function(rowsChanged)
 	end)
 
-    TriggerClientEvent('ND_lib:notify', id, {
+    TriggerClientEvent('ox_lib:notify', id, {
         title = 'Jailed',
         description = 'You have been sentenced to ' .. sentence .. ' minutes.',
         type = 'inform'
@@ -210,7 +210,7 @@ RegisterServerEvent('updateSentence',function(sentence, target)
             SetEntityCoords(target, Config.unJailCoords.x, Config.unJailCoords.y, Config.unJailCoords.z)
             SetEntityHeading( target, Config.unJailHeading)
             exports.ND_inventory:ReturnInventory(target)
-            TriggerClientEvent('ND_lib:notify', target, {
+            TriggerClientEvent('ox_lib:notify', target, {
                 title = 'Jail',
                 description = 'Your sentence has ended.',
                 type = 'inform'
@@ -232,11 +232,11 @@ end)
 ---@param officer string
 RegisterServerEvent("refusedFine", function(officer)
     local src = source
-    TriggerClientEvent('ND_lib:notify', officer, {
+    TriggerClientEvent('ox_lib:notify', officer, {
         type = 'error',
         description = 'Fine has been refused.',
     })
-    TriggerClientEvent('ND_lib:notify', src, {
+    TriggerClientEvent('ox_lib:notify', src, {
         type = 'error',
         description = 'You have refused the fine.',
     })
@@ -250,11 +250,11 @@ RegisterServerEvent("acceptedFine", function(fine, officer, message)
     local officerName = ND.GetPlayer(officer)
     local playerName = ND.GetPlayer(src)
     exports.pefcl:createInvoice(src, {from = officerName.name, toIdentifier = src, to = playerName.name, fromIdentifier = officer, amount = fine, message = message, src,})
-    TriggerClientEvent('ND_lib:notify', src, {
+    TriggerClientEvent('ox_lib:notify', src, {
         type = 'success',
         description = 'Fine Accepted',
     })
-    TriggerClientEvent('ND_lib:notify', officer, {
+    TriggerClientEvent('ox_lib:notify', officer, {
         type = 'success',
         description = 'Fine Accepted',
     })
@@ -265,9 +265,9 @@ RegisterNetEvent('gsrTest', function(target)
 	local src = source
 	local ply = Player(target)
 	if ply.state.shot == true then
-        TriggerClientEvent('ND_lib:notify', src, {type = 'success', description = 'Test comes back POSITIVE (Has Shot)'})
+        TriggerClientEvent('ox_lib:notify', src, {type = 'success', description = 'Test comes back POSITIVE (Has Shot)'})
 	else
-        TriggerClientEvent('ND_lib:notify', src, {type = 'error', description = 'Test comes back NEGATIVE (Has Not Shot)'})
+        TriggerClientEvent('ox_lib:notify', src, {type = 'error', description = 'Test comes back NEGATIVE (Has Not Shot)'})
 	end
 end)
 
