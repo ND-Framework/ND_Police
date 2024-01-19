@@ -34,6 +34,10 @@ AddEventHandler("ND:characterUnloaded", function(source, target)
     players[source] = nil
 end)
 
+AddEventHandler("ND:characterLoaded", function(character)
+    Player(character).state.InService = false
+end)
+
 lib.callback.register('ND_Police:isPlayerInService', function(source, target)
     return players[target or source]
 end)
