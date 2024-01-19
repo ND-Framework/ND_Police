@@ -13,8 +13,6 @@ local function checkGsr(state)
         inWater = true
     end
 
-    print("test", inWater, inWater and time-timeEnteredWater)
-
     if inWater and time-timeEnteredWater > (Config.clearGSRinWater*60) then
         local ped = cache.ped
         ClearPedBloodDamage(ped)
