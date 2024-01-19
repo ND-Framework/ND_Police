@@ -46,6 +46,14 @@ CreateThread(function()
 end)
 
 RegisterServerEvent('ND_Police:distributeEvidence', function(nodes)
+    local src = source
+    local state = Player(src).state
+    state.lastShot = os.time()
+
+    if not state.shot then
+        state.shot = true
+    end
+
     for coords, items in pairs(nodes) do
         if evidence[coords] then
             lib.table.merge(evidence[coords], items)
