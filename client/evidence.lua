@@ -3,6 +3,7 @@ local ammo
 local glm = require 'glm'
 local activeLoop = false
 local evidence = {}
+local evidenceMetadata = lib.load("data.evidence")
 
 CreateThread(function()
     while true do
@@ -38,6 +39,40 @@ local function createNode(item, coords, entity)
     end
 end
 
+local function startPedShooting(ammo)
+    local hit, entityHit, endCoords = lib.raycast.cam(tonumber('000111111', 2), 7, 50)
+    if not hit then goto skip end
+    
+    local evidenceInfo = evidenceMetadata[ammo]
+    if not evidenceInfo then
+        goto skip
+    elseif not evidenceInfo.projectile then
+        goto next
+    end
+    
+    if GetEntityType(entityHit) == 0 then
+        createNode('projectile', endCoords)
+    elseif NetworkGetEntityIsNetworked(entityHit) then
+        createNode('projectile', endCoords, entityHit)
+    end
+
+    Wait(100)
+    ::next::
+
+    if not evidenceInfo.casing then goto skip end
+
+    local pedCoords = GetEntityCoords(cache.ped)
+    local direction = math.rad(math.random(360))
+    local magnitude = math.random(100) / 20
+    local coords = vec3(pedCoords.x + math.sin(direction) * magnitude, pedCoords.y + math.cos(direction) * magnitude, pedCoords.z)
+    local success, impactZ = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z, true)
+
+    if success then
+        createNode('casing', vector3(coords.xy, impactZ))
+    end
+
+    ::skip::
+end
 
 AddEventHandler('ox_inventory:currentWeapon', function(weaponData)
     ammo = weaponData?.ammo
@@ -49,29 +84,7 @@ AddEventHandler('ox_inventory:currentWeapon', function(weaponData)
             Wait(0)
 
             if IsPedShooting(cache.ped) then
-                local hit, entityHit, endCoords = lib.raycast.cam(tonumber('000111111', 2), 7, 50)
-
-                if hit then
-                    if GetEntityType(entityHit) == 0 then
-                        createNode('slug', endCoords)
-                    elseif NetworkGetEntityIsNetworked(entityHit) then
-                        createNode('slug', endCoords, entityHit)
-                    end
-
-                    Wait(100)
-
-                    local pedCoords = GetEntityCoords(cache.ped)
-                    local direction = math.rad(math.random(360))
-                    local magnitude = math.random(100) / 20
-
-                    local coords = vec3(pedCoords.x + math.sin(direction) * magnitude, pedCoords.y + math.cos(direction) * magnitude, pedCoords.z)
-
-                    local success, impactZ = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z, true)
-
-                    if success then
-                        createNode('case', vector3(coords.xy, impactZ))
-                    end
-                end
+                startPedShooting(ammo)
             end
 
             if not ammo then

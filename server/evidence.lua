@@ -4,27 +4,31 @@ local clearEvidence = {}
 local evidenceMetadata = lib.load("data.evidence")
 
 local bulletText = {
-    slug = "Bullet slug from ",
-    case = "Bullet case from "
+    projectile = "Projectile from ",
+    casing = "Casing from "
 }
 
 exports.ox_inventory:registerHook('createItem', function(payload)
-    local name = payload.itemn.name
+    local name = payload.item.name
     local text = bulletText[name]
     if not text then return end
 
     local metadata = payload.metadata
     local evidence = evidenceMetadata[metadata.type]
     if not evidence then return end
+
+    local image = evidence[name]
+    if not image then return end
     
     return {
         label = text .. evidence.label,
-        weight = evidence.weight
+        weight = evidence.weight,
+        image = image
     }
 end, {
     itemFilter = {
-        case = true,
-        slug = true
+        projectile = true,
+        casing = true
     }
 })
 
@@ -64,12 +68,15 @@ RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
         evidence[coords] = nil
     end
 
+    local success = false
     for item, data in pairs(items) do
         for type, count in pairs(data) do
-            print(item, count, type)
-            exports.ox_inventory:AddItem(source, item, count, type)
+            if exports.ox_inventory:AddItem(source, item, count, type) then
+                success = true
+            end
         end
     end
 
+    if not success then return end
     lib.notify(source, {type = 'success', title = 'Evidence collected'})
 end)
