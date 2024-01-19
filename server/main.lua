@@ -113,7 +113,7 @@ RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
 
     for item, data in pairs(items) do
         for type, count in pairs(data) do
-            exports.ND_inventory:AddItem(source, item, count, type)
+            exports.ox_inventory:AddItem(source, item, count, type)
         end
     end
 
@@ -121,11 +121,11 @@ RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
 end)
 
 RegisterServerEvent('ND_Police:deploySpikestrip', function(data)
-    local count = exports.ND_inventory:Search(source, 'count', 'spikestrip')
+    local count = exports.ox_inventory:Search(source, 'count', 'spikestrip')
 
     if count < data.size then return end
 
-    exports.ND_inventory:RemoveItem(source, 'spikestrip', data.size)
+    exports.ox_inventory:RemoveItem(source, 'spikestrip', data.size)
 
     local dir = glm.direction(data.segment[1], data.segment[2])
 
@@ -153,11 +153,11 @@ RegisterServerEvent('ND_Police:retrieveSpikestrip', function(netId)
 
     if #(pedPos - spikePos) > 5 then return end
 
-    if not exports.ND_inventory:CanCarryItem(source, 'spikestrip', 1) then return end
+    if not exports.ox_inventory:CanCarryItem(source, 'spikestrip', 1) then return end
 
     DeleteEntity(spike)
 
-    exports.ND_inventory:AddItem(source, 'spikestrip', 1)
+    exports.ox_inventory:AddItem(source, 'spikestrip', 1)
 end)
 
 AddEventHandler('ND:playerLoaded', function(source, userid, charid) 
@@ -191,7 +191,7 @@ RegisterServerEvent('server:beginSentence',function(id, sentence, resume)
         type = 'inform'
     })
     if not resume then
-        exports.ND_inventory:ConfiscateInventory(id)
+        exports.ox_inventory:ConfiscateInventory(id)
     end
 
 	TriggerClientEvent('sendToJail', id, sentence)
@@ -213,7 +213,7 @@ RegisterServerEvent('updateSentence',function(sentence, target)
 		if target ~= nil then
             SetEntityCoords(target, Config.unJailCoords.x, Config.unJailCoords.y, Config.unJailCoords.z)
             SetEntityHeading( target, Config.unJailHeading)
-            exports.ND_inventory:ReturnInventory(target)
+            exports.ox_inventory:ReturnInventory(target)
             TriggerClientEvent('ox_lib:notify', target, {
                 title = 'Jail',
                 description = 'Your sentence has ended.',
