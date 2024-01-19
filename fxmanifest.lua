@@ -24,6 +24,5 @@ client_scripts {
     'client/spikes.lua',
     'client/jail.lua',
     'client/gsr.lua',
-    'client/evidence.lua',
-    'client/pursuitmode.lua'
+    'client/evidence.lua'
 }
