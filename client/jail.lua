@@ -26,7 +26,7 @@ end
 
 
 RegisterCommand('jail',function()
-    if not InService or playerState.invBusy then return end
+    if playerState.invBusy then return end
     local ped = cache.ped
     local coords = GetEntityCoords(ped)
     local nearbyPlayers = lib.getNearbyPlayers(coords, 2.0, true)
@@ -52,7 +52,7 @@ RegisterCommand('jail',function()
 end)
 
 RegisterNetEvent('beginJailing', function(data)
-    if not InService or playerState.invBusy then return end
+    if playerState.invBusy then return end
     
     local input = lib.inputDialog('Sentencing for '..data.name..'', {'Sentence Length'})
     if not input then return end
@@ -68,7 +68,7 @@ RegisterNetEvent('beginJailing', function(data)
 end)
 
 RegisterCommand('unjail',function(source, args)
-    if not InService or playerState.invBusy then return end
+    if playerState.invBusy then return end
 
     TriggerServerEvent('updateSentence', 0, tonumber(args[1]))
 end)

@@ -111,7 +111,6 @@ AddEventHandler('ChangeMode', function()
 
     if IsPedInAnyVehicle(ped, false) then
         local vehicle = GetVehiclePedIsIn(ped)
-        local service = playerStateInfo.InService
 
         if IsVehicleEligible(vehicle) then
             ProcessVehicleModeChange(vehicle)
@@ -120,7 +119,7 @@ AddEventHandler('ChangeMode', function()
 end)
 
 function IsVehicleEligible(vehicle)
-    return DoesEntityExist(vehicle) and playerStateInfo.InService
+    return DoesEntityExist(vehicle)
 end
 
 function ProcessVehicleModeChange(vehicle)
