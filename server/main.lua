@@ -3,7 +3,7 @@ local table = lib.table
 
 CreateThread(function()
     for _, player in pairs(NDCore.getPlayers("job", "lspd", true)) do
-        local inService = player.getMetadata('inService')
+        local inService = Player(source).state.InServic
         print(inService)
         if inService then
             players[player.source] = player
@@ -11,20 +11,20 @@ CreateThread(function()
     end
 end)
 
-
-
 RegisterNetEvent('ND:setPlayerInService', function(group)
     local player = NDCore.getPlayer(source)
-    local service = player.getMetadata('inService')
-    print(service)
+    local service = Player(source).state.InServic
+    print(group)
     if player then
-        if service == false then
+        if group == false then
             players[source] = player
-            return player.setMetadata('inService', true)
+       
+            Player(source).state.InService = group
         else
 
-         player.setMetadata('inService', false)
+            Player(source).state.InService = group
         end
+        print(service)
     end
 
     players[source] = nil
