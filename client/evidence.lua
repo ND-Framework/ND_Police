@@ -1,4 +1,8 @@
 local createdEvidence = {}
+local ammo
+local glm = require 'glm'
+local activeLoop = false
+local evidence = {}
 
 CreateThread(function()
     while true do
@@ -12,8 +16,6 @@ CreateThread(function()
     end
 end)
 
-local ammo
-local glm = require 'glm'
 
 local function createNode(item, coords, entity)
     if entity then
@@ -36,7 +38,6 @@ local function createNode(item, coords, entity)
     end
 end
 
-local activeLoop = false
 
 AddEventHandler('ox_inventory:currentWeapon', function(weaponData)
     ammo = weaponData?.ammo
@@ -81,7 +82,6 @@ AddEventHandler('ox_inventory:currentWeapon', function(weaponData)
     end
 end)
 
-local evidence = {}
 
 local function removeNode(coords)
     if evidence[coords] then
@@ -94,16 +94,6 @@ local function removeNode(coords)
         evidence[coords] = nil
     end
 end
-
-local evidenceOption
-
-CreateThread(function()
-    while true do
-        Wait(0)
-
-        evidenceOption = nil
-    end
-end)
 
 RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence)
     for coords in pairs(addEvidence) do
@@ -120,14 +110,6 @@ RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence
                         offsetSize = 1 / 2 ^ 3,
                         absoluteOffset = true,
                         offset = coords.w and coords.xyz,
-                        canInteract = function(entity, distance, coords, name, bone)
-                            if evidenceOption then
-                                return false
-                            else
-                                evidenceOption = true
-                                return true
-                            end
-                        end,
                         onSelect = function(data)
                             local nodes = {}
                             local targetCoords = data.coords
@@ -154,7 +136,7 @@ RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence
         end
     end
 
-    for coords in pairs(clearEvidence) do
-        removeNode(coords)
-    end
+    -- for coords in pairs(clearEvidence) do
+    --     removeNode(coords)
+    -- end
 end)
