@@ -1,4 +1,4 @@
-
+local data_jail = require("data.jail")
 local playerState = LocalPlayer.state
 
 ---@param time string
@@ -59,8 +59,9 @@ RegisterNetEvent('beginJailing', function(data)
     local sentence = tonumber(input[1])
     local prisoner = PlayerPedId(data.id)
 
-    SetEntityCoords(prisoner, Config.JailCoords.x, Config.JailCoords.y, Config.JailCoords.z)
-    SetEntityHeading(prisoner, Config.JailHeading)
+    local jailCoords = data_jail.jailCoords
+    SetEntityCoords(prisoner, JailCoords.x, JailCoords.y, JailCoords.z)
+    SetEntityHeading(prisoner, JailCoords.w)
 
     Sentenced = true
     TriggerServerEvent('server:beginSentence', data.id, sentence, resume)

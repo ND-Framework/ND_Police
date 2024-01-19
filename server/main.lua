@@ -1,5 +1,6 @@
 local players = {}
 local table = lib.table
+local data_jail = lib.load("data.jail")
 
 CreateThread(function()
     for _, player in pairs(NDCore.getPlayers("job", "lspd", true)) do
@@ -211,8 +212,9 @@ RegisterServerEvent('updateSentence',function(sentence, target)
 
 	if sentence <= 0 then
 		if target ~= nil then
-            SetEntityCoords(target, Config.unJailCoords.x, Config.unJailCoords.y, Config.unJailCoords.z)
-            SetEntityHeading( target, Config.unJailHeading)
+            local unJailCoords = data_jail.unJailCoords
+            SetEntityCoords(target, unJailCoords.x, unJailCoords.y,unJailCoords.z)
+            SetEntityHeading( target, unJailCoords.w)
             exports.ox_inventory:ReturnInventory(target)
             TriggerClientEvent('ox_lib:notify', target, {
                 title = 'Jail',
