@@ -2,48 +2,6 @@ local players = {}
 local table = lib.table
 local data_jail = lib.load("data.jail")
 
-CreateThread(function()
-    for _, player in pairs(NDCore.getPlayers("job", "lspd", true)) do
-        local inService = Player(source).state.InServic
-        print(inService)
-        if inService then
-            players[player.source] = player
-        end
-    end
-end)
-
-RegisterNetEvent('ND:setPlayerInService', function(group)
-    local player = NDCore.getPlayer(source)
-    local service = Player(source).state.InServic
-    print(group)
-    if player then
-        if group == false then
-            players[source] = player
-       
-            Player(source).state.InService = group
-        else
-
-            Player(source).state.InService = group
-        end
-        print(service)
-    end
-
-    players[source] = nil
-end)
-
-AddEventHandler("ND:characterUnloaded", function(source, target)
-    players[source] = nil
-end)
-
-AddEventHandler("ND:characterLoaded", function(character)
-    Player(character).state.InService = false
-end)
-
-lib.callback.register('ND_Police:isPlayerInService', function(source, target)
-    return players[target or source]
-end)
-
-
 lib.callback.register('ND_Police:setPlayerCuffs', function(source, target)
     local player = NDCore.getPlayer(source)
 
