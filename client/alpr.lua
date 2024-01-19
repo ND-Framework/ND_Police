@@ -6,8 +6,8 @@ local playerState = LocalPlayer.state
 
 local vehicleData = setmetatable({}, {
 	__index = function(self, index)
-		local data = Ox.GetVehicleData(index)
-
+		local data = lib.getVehicleProperties(index, model)
+        print(json.encode(data))
 		if data then
 			data = {
 				name = data.name,
@@ -27,14 +27,17 @@ local function updateTextUI()
         local speed = math.floor(GetEntitySpeed(entity) * 2.23)
         local data = vehicleData[GetEntityArchetypeName(entity)]
 
-        lib.showTextUI(('Speed: %s MPH  \nPlate: %s  \nMake: %s  \nModel: %s'):format(speed, GetVehicleNumberPlateText(entity), data.make, data.name))
+        lib.showTextUI(('Speed: %s MPH  \nPlate: %s '):format(speed, GetVehicleNumberPlateText(entity)))
     end
 end
 
 local active = false
 
 RegisterCommand('alpr', function()
-    if not InService or playerState.invBusy then return end
+    local player = NDCore.getPlayer()
+    local service = playerState.InService
+    print(service)
+    if service == false or playerState.invBusy then return end
 
     active = not active
 
