@@ -24,7 +24,8 @@ server_scripts {
     'server/main.lua',
     'server/evidence.lua',
     'server/gsr.lua',
-    'server/cuff.lua'
+    'server/cuff.lua',
+    'server/spikes.lua'
 }
 
 client_scripts {
