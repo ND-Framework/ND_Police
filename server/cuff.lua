@@ -10,7 +10,7 @@ local function cuffCheck(src, target, cuffType)
     if GetVehiclePedIsIn(ped) ~= 0 or
         GetVehiclePedIsIn(targetPed) ~= 0 or
         #(GetEntityCoords(ped)-GetEntityCoords(targetPed)) > 5.0 or
-        not lib.table.conains(cuffItems, cuffType) or
+        not lib.table.contains(cuffItems, cuffType) or
         Ox_inventory:GetItemCount(src, cuffType) == 0
         then return
     end
