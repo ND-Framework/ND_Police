@@ -26,6 +26,7 @@ exports.ox_target:addGlobalPlayer({
     },
     {
         name = 'release',
+        icon = 'fas fa-hands-bound',
         label = 'Release',
         distance = 1.5,
         canInteract = function(entity)
@@ -88,6 +89,8 @@ AddStateBagChangeHandler('isEscorted', ('player:%s'):format(cache.serverId), fun
 
     if IsEntityAttached(cache.ped) then
         DetachEntity(cache.ped, true, false)
+        StopAnimTask(cache.ped, 'anim@move_m@prisoner_cuffed', 'walk', -8.0)
+        StopAnimTask(cache.ped, 'anim@move_m@trash', 'run', -8.0)
     end
 
     if value then setEscorted(value) end

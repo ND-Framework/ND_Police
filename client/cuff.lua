@@ -170,7 +170,10 @@ local function setCuffed(enabled, angle, cuffType)
     local sound = cuffSounds[currentCuffType]
 
     if sound then
-        playsound(entity, sound[2])
+        CreateThread(function()
+            while not DoesEntityExist(entity) do Wait(0) end
+            playsound(entity, sound[2])
+        end)
     end
 
     CreateThread(function()
@@ -270,6 +273,8 @@ local function normalCuffPlayer(ped, targetPed, targetPlayer, cuffType)
 
     lib.requestAnimDict(dict)
     playAnimation(ped, dict, "a_uncuff")
+    Wait(1000)
+    ClearPedTasks(ped)
 end
 
 local function agressiveCuffPlayer(ped, targetPed, targetPlayer, cuffType)
@@ -302,17 +307,14 @@ local function agressiveCuffPlayer(ped, targetPed, targetPlayer, cuffType)
 end
 
 RegisterNetEvent("ND_Police:syncAgressiveCuff", function(angle, cuffType, heading)
-    print(angle, cuffType, heading)
     cuffMe(angle, cuffType, heading)
 end)
 
 RegisterNetEvent("ND_Police:syncNormalCuff", function(angle, cuffType)
-    print(angle, cuffType)
     setCuffed(true, angle, cuffType)
 end)
 
 RegisterNetEvent("ND_Police:uncuffPed", function()
-    print("uncuff")
     setCuffed(false)
 end)
 
@@ -408,7 +410,12 @@ exports.ox_target:addGlobalPlayer({
         onSelect = function(data)
             lib.requestAnimDict("mp_arresting")
             playAnimation(cache.ped, "mp_arresting", "a_uncuff")
-            TriggerServerEvent("ND_Police:uncuffPed", GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)))
+            Wait(1000)
+            ClearPedTasks(cache.ped)
+
+            local serverId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity))
+            TriggerServerEvent("ND_Police:uncuffPed", serverId)
+            TriggerServerEvent('ND_Police:setPlayerEscort', serverId, not IsEntityAttachedToEntity(data.entity, cache.ped))
         end
     },
 })
