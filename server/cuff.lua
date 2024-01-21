@@ -6,5 +6,9 @@ RegisterNetEvent("ND_Police:syncNormalCuff", function(target, angle, cuffType)
     TriggerClientEvent("ND_Police:syncNormalCuff", target, angle, cuffType)
 end)
 
+RegisterNetEvent("ND_Police:uncuffPed", function(target)
+    TriggerClientEvent("ND_Police:uncuffPed", target)
+end)
+
 -- todo: add checks if player if player has the item and distance checks between players and if player using cuffs isn't cuffed themselves and check if they're in a car or not.
 -- also remove their item and then sync.

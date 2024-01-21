@@ -258,11 +258,6 @@ local function cuffMe(angle, cuffType, heading)
     end)
 end
 
--- local ped = cache.ped
--- local player = lib.getClosestPlayer(coords, 5.0, false)
--- local targetPed = GetPlayerPed(player)
--- local targetPlayer = GetPlayerServerId(player)
-
 local function normalCuffPlayer(ped, targetPed, targetPlayer, cuffType)
     local dict = "mp_arresting"
     local coords = GetEntityCoords(ped)
@@ -307,11 +302,18 @@ local function agressiveCuffPlayer(ped, targetPed, targetPlayer, cuffType)
 end
 
 RegisterNetEvent("ND_Police:syncAgressiveCuff", function(angle, cuffType, heading)
+    print(angle, cuffType, heading)
     cuffMe(angle, cuffType, heading)
 end)
 
 RegisterNetEvent("ND_Police:syncNormalCuff", function(angle, cuffType)
+    print(angle, cuffType)
     setCuffed(true, angle, cuffType)
+end)
+
+RegisterNetEvent("ND_Police:uncuffPed", function()
+    print("uncuff")
+    setCuffed(false)
 end)
 
 AddEventHandler("onResourceStop", function(resource)
@@ -330,24 +332,6 @@ AddEventHandler("onResourceStop", function(resource)
     end
 end)
 
-RegisterCommand("cuffme", function(source, args, rawCommand)
-    local ped = cache.ped
-
-    local anim = handsAnim["hu"]
-    if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) then
-        return normalCuffPlayer()
-    end
-
-    anim = handsAnim["huk"]
-    if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) then
-        return agressiveCuffPlayer() -- todo make target based and item based.
-    end
-end, false)
-
-RegisterCommand("uncuffme", function(source, args, rawCommand)
-    setCuffed(false)
-end, false)
-
 lib.addKeybind({
     name = "handsup",
     description = "Hands up",
@@ -357,9 +341,9 @@ lib.addKeybind({
 
         holdingHands = true
         local time = GetCloudTimeAsInt()
-        while holdingHands and GetCloudTimeAsInt()-time < 1 do Wait(0) end
+        while holdingHands and GetCloudTimeAsInt()-time < 2 do Wait(0) end
         
-        if GetCloudTimeAsInt()-time >= 1 then
+        if GetCloudTimeAsInt()-time >= 2 then
             return toggleHandsUp(not handsUpStatus, "huk")
         end
 
@@ -368,4 +352,63 @@ lib.addKeybind({
     onReleased = function(self)
         holdingHands = false
     end
+})
+
+local function IsPedCuffed(ped)
+    local targetPlayer = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))
+    local targetState = Player(targetPlayer).state
+    return targetState.isCuffed
+end
+
+local function canCuffPed(ped)
+    local anim = handsAnim["hu"]
+    if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) then
+        return true, false
+    end
+
+    anim = handsAnim["huk"]
+    if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) then
+        return true, true
+    end
+end
+
+exports.ox_target:addGlobalPlayer({
+    {
+        name = "ND_Police:cuff",
+        icon = "fas fa-handcuffs",
+        label = "Cuff player",
+        distance = 1.5,
+        items = "cuffs",
+        canInteract = function(entity)
+            return canCuffPed(entity) and not IsPedCuffed(entity)
+        end,
+        onSelect = function(data)
+            local ped = data.entity
+            local allow, agressive = canCuffPed(ped)
+            if not allow then return end
+
+            local player = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))
+
+            if agressive then
+                agressiveCuffPlayer(cache.ped, ped, player, "cuffs")
+            else
+                normalCuffPlayer(cache.ped, ped, player, "cuffs")
+            end
+        end
+    },
+    {
+        name = "ND_Police:uncuff",
+        icon = "fas fa-handcuffs",
+        label = "Remove handcuffs",
+        distance = 1.5,
+        items = "handcuffkey",
+        canInteract = function(entity)
+            return IsPedCuffed(entity)
+        end,
+        onSelect = function(data)
+            lib.requestAnimDict("mp_arresting")
+            playAnimation("mp_arresting", "a_uncuff")
+            TriggerServerEvent("ND_Police:uncuffPed", GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)))
+        end
+    },
 })
