@@ -392,7 +392,7 @@ AddEventHandler("onResourceStop", function(resource)
     end
 end)
 
-AddEventHandler("ND_Police:unziptie", function(
+AddEventHandler("ND_Police:unziptie", function()
     if cache.vehicle then return end
     local targetPed = getTargetPed()
     uncuffPed(targetPed, "zipties")
