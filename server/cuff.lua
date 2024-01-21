@@ -65,8 +65,10 @@ RegisterNetEvent("ND_Police:syncNormalCuff", function(target, angle, cuffType, s
     TriggerClientEvent("ND_Police:syncNormalCuff", target, angle, cuffType)
 end)
 
-RegisterNetEvent("ND_Police:uncuffPed", function(target, cuffType, slot)
+RegisterNetEvent("ND_Police:uncuffPed", function(target, cuffType)
     local src = source
-    if not uncuffCheck(src, target, cuffType) or not Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
+    if not uncuffCheck(src, target, cuffType) then return end
     TriggerClientEvent("ND_Police:uncuffPed", target)
+    Wait(500)
+    Ox_inventory:AddItem(src, cuffType, 1)
 end)

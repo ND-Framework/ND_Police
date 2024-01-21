@@ -330,7 +330,7 @@ local function canCuffPed(ped)
     end
 end
 
-local function uncuffPed(ped, cuffType, slot)
+local function uncuffPed(ped, cuffType)
     if not ped or not DoesEntityExist(ped) then return end
 
     lib.requestAnimDict("mp_arresting")
@@ -339,7 +339,7 @@ local function uncuffPed(ped, cuffType, slot)
     ClearPedTasks(cache.ped)
 
     local serverId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))
-    TriggerServerEvent("ND_Police:uncuffPed", serverId, cuffType, slot)
+    TriggerServerEvent("ND_Police:uncuffPed", serverId, cuffType)
     TriggerServerEvent('ND_Police:setPlayerEscort', serverId, false)
 end
 
@@ -392,10 +392,10 @@ AddEventHandler("onResourceStop", function(resource)
     end
 end)
 
-AddEventHandler("ND_Police:unziptie", function(data, slot)
+AddEventHandler("ND_Police:unziptie", function(
     if cache.vehicle then return end
     local targetPed = getTargetPed()
-    uncuffPed(targetPed, "zipties", slot)
+    uncuffPed(targetPed, "zipties")
 end)
 
 exports("ziptie", function(data, slot)
@@ -407,7 +407,7 @@ end)
 exports("uncuff", function(data, slot)
     if cache.vehicle then return end
     local targetPed = getTargetPed()
-    uncuffPed(targetPed, "cuffs", slot)
+    uncuffPed(targetPed, "cuffs")
 end)
 
 exports("cuff", function(data, slot)
