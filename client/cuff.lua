@@ -427,10 +427,9 @@ lib.addKeybind({
         local time = GetCloudTimeAsInt()
 
         while holdingHands and GetCloudTimeAsInt()-time < 2 do Wait(0) end
-        if not holdingHands then return end
         
         if GetCloudTimeAsInt()-time >= 2 then
-            return toggleHandsUp(not handsUpStatus, "huk")
+            return holdingHands and toggleHandsUp(not handsUpStatus, "huk")
         end
 
         toggleHandsUp(not handsUpStatus, "hu")
