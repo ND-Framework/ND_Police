@@ -269,7 +269,7 @@ local function normalCuffPlayer(ped, targetPed, targetPlayer, cuffType)
     Wait(100)
 
     lib.requestAnimDict(dict)
-    playAnimation(dict, "a_uncuff")
+    playAnimation(ped, dict, "a_uncuff")
 end
 
 local function agressiveCuffPlayer(ped, targetPed, targetPlayer, cuffType)
@@ -407,7 +407,7 @@ exports.ox_target:addGlobalPlayer({
         end,
         onSelect = function(data)
             lib.requestAnimDict("mp_arresting")
-            playAnimation("mp_arresting", "a_uncuff")
+            playAnimation(cache.ped, "mp_arresting", "a_uncuff")
             TriggerServerEvent("ND_Police:uncuffPed", GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)))
         end
     },
