@@ -1,4 +1,3 @@
-local ox_inventory = exports.ox_inventory
 local cuffItems = {"cuffs", "zipties"}
 local uncuffItems = {
     ["cuffs"] = "handcuffkey",
@@ -12,7 +11,7 @@ local function cuffCheck(src, target, cuffType)
         GetVehiclePedIsIn(targetPed) ~= 0 or
         #(GetEntityCoords(ped)-GetEntityCoords(targetPed)) > 5.0 or
         not lib.table.conains(cuffItems, cuffType) or
-        ox_inventory:GetItemCount(src, cuffType) == 0
+        Ox_inventory:GetItemCount(src, cuffType) == 0
         then return
     end
 
@@ -37,7 +36,7 @@ local function uncuffCheck(src, target, cuffType)
         GetVehiclePedIsIn(targetPed) ~= 0 or
         #(GetEntityCoords(ped)-GetEntityCoords(targetPed)) > 5.0 or
         not uncuffItems[cuffType] or
-        ox_inventory:GetItemCount(src, uncuffItems[cuffType]) == 0
+        Ox_inventory:GetItemCount(src, uncuffItems[cuffType]) == 0
         then return
     end
 
@@ -56,18 +55,18 @@ end
 
 RegisterNetEvent("ND_Police:syncAgressiveCuff", function(target, angle, cuffType, slot, heading)
     local src = source
-    if not cuffCheck(src, target, cuffType) or not ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
+    if not cuffCheck(src, target, cuffType) or not Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
     TriggerClientEvent("ND_Police:syncAgressiveCuff", target, angle, cuffType, heading)
 end)
 
 RegisterNetEvent("ND_Police:syncNormalCuff", function(target, angle, cuffType, slot)
     local src = source
-    if not cuffCheck(src, target, cuffType) or not ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
+    if not cuffCheck(src, target, cuffType) or not Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
     TriggerClientEvent("ND_Police:syncNormalCuff", target, angle, cuffType)
 end)
 
 RegisterNetEvent("ND_Police:uncuffPed", function(target, cuffType, slot)
     local src = source
-    if not uncuffCheck(src, target, cuffType) or not ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
+    if not uncuffCheck(src, target, cuffType) or not Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
     TriggerClientEvent("ND_Police:uncuffPed", target)
 end)

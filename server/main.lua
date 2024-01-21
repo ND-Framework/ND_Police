@@ -1,5 +1,4 @@
-local players = {}
-local table = lib.table
+Ox_inventory = exports.ox_inventory
 local data_jail = lib.load("data.jail")
 
 lib.callback.register('ND_Police:setPlayerCuffs', function(source, target)
@@ -101,7 +100,7 @@ RegisterServerEvent('server:beginSentence',function(id, sentence, resume)
         type = 'inform'
     })
     if not resume then
-        exports.ox_inventory:ConfiscateInventory(id)
+        Ox_inventory:ConfiscateInventory(id)
     end
 
 	TriggerClientEvent('sendToJail', id, sentence)
@@ -124,7 +123,7 @@ RegisterServerEvent('updateSentence',function(sentence, target)
             local unJailCoords = data_jail.unJailCoords
             SetEntityCoords(target, unJailCoords.x, unJailCoords.y,unJailCoords.z)
             SetEntityHeading( target, unJailCoords.w)
-            exports.ox_inventory:ReturnInventory(target)
+            Ox_inventory:ReturnInventory(target)
             TriggerClientEvent('ox_lib:notify', target, {
                 title = 'Jail',
                 description = 'Your sentence has ended.',

@@ -8,7 +8,7 @@ local bulletText = {
     casing = "Casing from "
 }
 
-exports.ox_inventory:registerHook('createItem', function(payload)
+Ox_inventory:registerHook('createItem', function(payload)
     local name = payload.item.name
     local text = bulletText[name]
     if not text then return end
@@ -79,7 +79,7 @@ RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
     local success = false
     for item, data in pairs(items) do
         for type, count in pairs(data) do
-            if exports.ox_inventory:AddItem(source, item, count, type) then
+            if Ox_inventory:AddItem(source, item, count, type) then
                 success = true
             end
         end
