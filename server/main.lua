@@ -1,22 +1,6 @@
 Ox_inventory = exports.ox_inventory
 local data_jail = lib.load("data.jail")
 
-lib.callback.register('ND_Police:setPlayerCuffs', function(source, target)
-    local player = NDCore.getPlayer(source)
-
-    if not player then return end
-
-    target = Player(target)?.state
-
-    if not target then return end
-
-    local state = not target.isCuffed
-
-    target:set('isCuffed', state, true)
-
-    return state
-end)
-
 RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state)
     local player = NDCore.getPlayer(source)
 
