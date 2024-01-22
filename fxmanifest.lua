@@ -20,20 +20,16 @@ shared_scripts {
 }
 
 server_scripts {
-    '@oxmysql/lib/MySQL.lua',
     'server/main.lua',
     'server/evidence.lua',
-    'server/gsr.lua',
-    'server/cuff.lua',
-    'server/spikes.lua'
+    'server/cuff.lua'
 }
 
 client_scripts {
     'client/main.lua',
     'client/cuff.lua',
     'client/escort.lua',
-    'client/spikes.lua',
-    'client/jail.lua',
-    'client/gsr.lua',
     'client/evidence.lua'
+    'client/gsr.lua',
+    'client/spikes.lua'
 }
