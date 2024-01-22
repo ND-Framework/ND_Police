@@ -9,7 +9,7 @@ RegisterServerEvent('ND_Police:deploySpikestrip', function(data)
 
     local dir = glm.direction(data.segment[1], data.segment[2])
 
-    for i = 1, data.size do
+    for i = data.size, 1, -1 do
         local coords = glm.segment.getPoint(data.segment[1], data.segment[2], (i * 2 - 1) / (data.size * 2))
         local object = CreateObject(`p_ld_stinger_s`, coords.x, coords.y, coords.z, true, true, true)
 
@@ -19,6 +19,7 @@ RegisterServerEvent('ND_Police:deploySpikestrip', function(data)
 
         SetEntityRotation(object, math.deg(-math.sin(dir.z)), 0.0, math.deg(math.atan(dir.y, dir.x)) + 90, 2, false)
         Entity(object).state:set('inScope', true, true)
+        Wait(800)
     end
 end)
 
