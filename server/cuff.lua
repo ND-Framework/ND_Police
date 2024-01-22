@@ -22,7 +22,7 @@ local function cuffCheck(src, target, cuffType)
         not playerState.isCuffed and
         not playerState.isCuffing and
 
-        targetState.handsUp and
+        targetState.handsUp or cuffType == "cuffs" and
         not targetState.gettingCuffed and
         not targetState.isCuffing and
         not targetState.isCuffed

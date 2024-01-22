@@ -318,14 +318,14 @@ local function IsPedCuffed(ped)
     return targetState.isCuffed
 end
 
-local function canCuffPed(ped)
+local function canCuffPed(ped, cuffType)
     local anim = handsAnim["hu"]
     if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) then
         return true, false
     end
 
     anim = handsAnim["huk"]
-    if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) then
+    if IsEntityPlayingAnim(ped, anim.dict, anim.name, 3) or cuffType == "cuffs" then
         return true, true
     end
 end
@@ -346,7 +346,7 @@ end
 local function cuffPed(ped, cuffType, slot)
     if not ped or not DoesEntityExist(ped) then return end
 
-    local allow, agressive = canCuffPed(ped)
+    local allow, agressive = canCuffPed(ped, cuffType)
     if not allow then return end
 
     local player = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))
@@ -447,7 +447,7 @@ exports.ox_target:addGlobalPlayer({
         distance = 1.5,
         items = "cuffs",
         canInteract = function(entity)
-            return canCuffPed(entity) and not IsPedCuffed(entity)
+            return canCuffPed(entity, "cuffs") and not IsPedCuffed(entity)
         end,
         onSelect = function(data)
             local ped = data.entity
@@ -461,7 +461,7 @@ exports.ox_target:addGlobalPlayer({
         distance = 1.5,
         items = "zipties",
         canInteract = function(entity)
-            return canCuffPed(entity) and not IsPedCuffed(entity)
+            return canCuffPed(entity, "cuffs") and not IsPedCuffed(entity)
         end,
         onSelect = function(data)
             local ped = data.entity
