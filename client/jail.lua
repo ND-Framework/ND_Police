@@ -9,12 +9,12 @@ local function updateSentence(time, id)
             Wait(60000)
             time = time - 1
             if time < 1 then
-                TriggerServerEvent('updateSentence', 0 , id)
+                TriggerServerEvent('ND_Police:updateSentence', 0 , id)
                 Sentenced = false
                 break
             else
-                TriggerServerEvent('updateSentence', time, id)
-                lib.notify({
+                TriggerServerEvent('ND_Police:updateSentence', time, id)
+                NDCore.notify({
                     title = 'Jail',
                     description = 'Only ' .. time .. ' months left',
                     type = 'inform'
@@ -37,7 +37,7 @@ RegisterCommand('jail',function()
         local option = nearbyPlayers[i]
         option.id = GetPlayerServerId(option.id)
         option.title = Player(option.id).state.name
-        option.event = 'beginJailing'
+        option.event = 'ND_Police:beginJailing'
         option.args = {id = option.id, name = option.title}
         nearbyPlayers[i] = option
     end
@@ -51,7 +51,7 @@ RegisterCommand('jail',function()
     lib.showContext('jailmenu')
 end)
 
-RegisterNetEvent('beginJailing', function(data)
+RegisterNetEvent('ND_Police:beginJailing', function(data)
     if playerState.invBusy then return end
     
     local input = lib.inputDialog('Sentencing for '..data.name..'', {'Sentence Length'})
@@ -64,14 +64,14 @@ RegisterNetEvent('beginJailing', function(data)
     SetEntityHeading(prisoner, JailCoords.w)
 
     Sentenced = true
-    TriggerServerEvent('server:beginSentence', data.id, sentence, resume)
+    TriggerServerEvent('ND_Police:beginSentence', data.id, sentence, resume)
     updateSentence(sentence, data.id)
 end)
 
 RegisterCommand('unjail',function(source, args)
     if playerState.invBusy then return end
 
-    TriggerServerEvent('updateSentence', 0, tonumber(args[1]))
+    TriggerServerEvent('ND_Police:updateSentence', 0, tonumber(args[1]))
 end)
 
 lib.onCache('playerId', function(value)
