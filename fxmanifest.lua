@@ -29,7 +29,7 @@ client_scripts {
     'client/main.lua',
     'client/cuff.lua',
     'client/escort.lua',
-    'client/evidence.lua'
+    'client/evidence.lua',
     'client/gsr.lua',
     'client/spikes.lua'
 }
