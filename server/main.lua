@@ -71,3 +71,13 @@ RegisterNetEvent('ND_Police:gsrTest', function(target)
         description = 'Test comes back NEGATIVE (Has Not Shot)'
     })
 end)
+
+RegisterNetEvent("ND_Police:shotspotter", function(location, coords)
+    if GetResourceState("ND_MDT") ~= "started" then return end
+
+    exports["ND_MDT"]:createDispatch({
+        location = location,
+        callDescription = "Shotspotter detected gunshot",
+        coords = coords
+    })
+end)

@@ -32,5 +32,6 @@ client_scripts {
     'client/evidence.lua',
     'client/gsr.lua',
     'client/spikes.lua',
-    'client/shield.lua'
+    'client/shield.lua',
+    'client/shotspotter.lua'
 }
