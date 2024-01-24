@@ -421,7 +421,7 @@ lib.addKeybind({
     description = "Hands up",
     defaultKey = "X",
     onPressed = function(self)
-        if not handsUpStatus and cache.vehicle then return end
+        if not handsUpStatus and cache.vehicle or LocalPlayer.state.blockHandsUp then return end
 
         holdingHands = true
         local time = GetCloudTimeAsInt()
