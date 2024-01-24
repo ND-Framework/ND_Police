@@ -1,5 +1,4 @@
 local createdEvidence = {}
-local ammo
 local glm = require 'glm'
 local activeLoop = false
 local evidence = {}
@@ -18,7 +17,7 @@ CreateThread(function()
 end)
 
 
-local function createNode(item, coords, entity)
+local function createNode(ammo, item, coords, entity)
     if entity then
         coords = glm.snap(GetOffsetFromEntityGivenWorldCoords(entity, coords.x, coords.y, coords.z), vec3(1 / 2 ^ 4))
         coords = vec4(coords, NetworkGetNetworkIdFromEntity(entity))
@@ -51,9 +50,9 @@ local function startPedShooting(ammo)
     end
     
     if GetEntityType(entityHit) == 0 then
-        createNode('projectile', endCoords)
+        createNode(ammo, 'projectile', endCoords)
     elseif NetworkGetEntityIsNetworked(entityHit) then
-        createNode('projectile', endCoords, entityHit)
+        createNode(ammo, 'projectile', endCoords, entityHit)
     end
 
     Wait(100)
@@ -68,33 +67,16 @@ local function startPedShooting(ammo)
     local success, impactZ = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z, true)
 
     if success then
-        createNode('casing', vector3(coords.xy, impactZ))
+        createNode(ammo, 'casing', vector3(coords.xy, impactZ))
     end
 
     ::skip::
 end
 
-AddEventHandler('ox_inventory:currentWeapon', function(weaponData)
-    ammo = weaponData?.ammo
-
-    if ammo and not activeLoop then
-        activeLoop = true
-
-        while true do
-            Wait(0)
-
-            if IsPedShooting(cache.ped) then
-                startPedShooting(ammo)
-            end
-
-            if not ammo then
-                activeLoop = false
-                break
-            end
-        end
-    end
+AddEventHandler("ND_Police:playerJustShot", function(weaponData)
+    local ammo = weaponData?.ammo
+    return ammo and startPedShooting(ammo)
 end)
-
 
 local function removeNode(coords)
     if evidence[coords] then
