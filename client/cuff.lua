@@ -293,8 +293,7 @@ local function agressiveCuffPlayer(ped, targetPed, targetPlayer, cuffType, slot)
     local playerState = Player(cache.serverId).state
     playerState:set("isCuffing", true, true)
 
-    local angle = getAngle(ped, targetPed, coords, GetEntityCoords(targetPed))
-    TriggerServerEvent("ND_Police:syncAgressiveCuff", targetPlayer, angle, cuffType, slot, heading)
+    TriggerServerEvent("ND_Police:syncAgressiveCuff", targetPlayer, "back", cuffType, slot, heading)
     Wait(100)
 
     lib.requestAnimDict(dict)
