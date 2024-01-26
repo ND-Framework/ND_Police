@@ -340,7 +340,7 @@ local function uncuffPed(ped, cuffType)
 
     local serverId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))
     TriggerServerEvent("ND_Police:uncuffPed", serverId, cuffType)
-    TriggerServerEvent('ND_Police:setPlayerEscort', serverId, false)
+    StopEscortPlayer(serverId)
 end
 
 local function cuffPed(ped, cuffType, slot)
