@@ -247,26 +247,6 @@ local function getAngle(ped, targetPed, pedCoords, targetPedCoords)
     return dotProduct > 0 and "front" or "back"
 end
 
-local function cuffMe(angle, cuffType, heading)
-    local ped = cache.ped
-    local coords = GetEntityCoords(ped)
-    local dict = "mp_arrest_paired"
-    
-    SetEntityHeading(ped, heading)
-    Wait(10)
-    
-    local state = Player(cache.serverId).state
-    state:set("gettingCuffed", true, true)
-
-    lib.requestAnimDict(dict)
-	TaskPlayAnim(ped, dict, "crook_p2_back_left", 8.0, -8.0, 4500, 33, 0, false, false, false)
-    
-    SetTimeout(4500, function()
-        state:set("gettingCuffed", false, true)
-        setCuffed(true, angle, cuffType)
-    end)
-end
-
 local function normalCuffPlayer(ped, targetPed, targetPlayer, cuffType, slot)
     local dict = "mp_arresting"
     local coords = GetEntityCoords(ped)
@@ -305,10 +285,18 @@ local function agressiveCuffPlayer(ped, targetPed, targetPlayer, cuffType, slot)
     end
 
     AttachEntityToEntity(ped, targetPed, 11816, -0.1, -0.55, 0.0, 0.0, 0.0, -20.0, false, false, false, false, 20, false)
-    SetTimeout(4000, function()
-        DetachEntity(ped)
-        playerState:set("isCuffing", false, true)
-    end)
+
+    while targetState.gettingCuffed do
+        targetState = Player(targetPlayer).state
+        Wait(100)
+    end
+
+    DetachEntity(ped)
+    playerState:set("isCuffing", false, true)
+
+    if IsEntityPlayingAnim(ped, dict, "cop_p2_back_left", 3) then
+        StopAnimTask(ped, dict, "cop_p2_back_left", 2.0)
+    end
 end
 
 local function IsPedCuffed(ped)
@@ -363,8 +351,34 @@ local function getTargetPed()
     return player and GetPlayerPed(player)
 end
 
-RegisterNetEvent("ND_Police:syncAgressiveCuff", function(angle, cuffType, heading)
-    cuffMe(angle, cuffType, heading)
+lib.callback.register("ND_Police:syncAgressiveCuff", function(angle, cuffType, heading)
+    local ped = cache.ped
+    local coords = GetEntityCoords(ped)
+    local dict = "mp_arrest_paired"
+    local escaped = false
+
+    SetEntityHeading(ped, heading)
+    Wait(10)
+    
+    local state = Player(cache.serverId).state
+    state:set("gettingCuffed", true, true)
+
+    lib.requestAnimDict(dict)
+	TaskPlayAnim(ped, dict, "crook_p2_back_left", 8.0, -8.0, 4500, 33, 0, false, false, false)
+    
+    SetTimeout(4500, function()
+        if escaped then return end
+        state:set("gettingCuffed", false, true)
+        setCuffed(true, angle, cuffType)
+    end)
+
+    escaped = lib.skillCheck("hard")
+    if escaped then
+        state:set("gettingCuffed", false, true)
+        StopAnimTask(ped, dict, "crook_p2_back_left", 2.0)
+    end
+
+    return escaped
 end)
 
 RegisterNetEvent("ND_Police:syncNormalCuff", function(angle, cuffType)

@@ -55,8 +55,12 @@ end
 
 RegisterNetEvent("ND_Police:syncAgressiveCuff", function(target, angle, cuffType, slot, heading)
     local src = source
-    if not cuffCheck(src, target, cuffType) or not Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot) then return end
-    TriggerClientEvent("ND_Police:syncAgressiveCuff", target, angle, cuffType, heading)
+    if not cuffCheck(src, target, cuffType) then return end
+
+    local escaped = lib.callback.await("ND_Police:syncAgressiveCuff", target, angle, cuffType, heading)
+    if escaped then return end
+
+    Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot)
 end)
 
 RegisterNetEvent("ND_Police:syncNormalCuff", function(target, angle, cuffType, slot)
