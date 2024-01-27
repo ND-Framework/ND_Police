@@ -68,7 +68,7 @@ local function setEscorted(serverId)
         if not ped then break end
 
         if not IsEntityAttachedToEntity(cache.ped, ped) then
-            AttachEntityToEntity(cache.ped, ped, 11816, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0, false, false, true, true, 2, true)
+            AttachEntityToEntity(cache.ped, ped, 11816, 0.38, 0.4, 0.0, 0.0, 0.0, 0.0, false, false, true, true, 2, true)
         end
 
         if IsPedWalking(ped) then
