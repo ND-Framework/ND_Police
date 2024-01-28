@@ -33,5 +33,6 @@ client_scripts {
     'client/gsr.lua',
     'client/spikes.lua',
     'client/shield.lua',
-    'client/shotspotter.lua'
+    'client/shotspotter.lua',
+    'client/locker_rooms.lua'
 }
