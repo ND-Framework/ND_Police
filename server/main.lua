@@ -1,5 +1,6 @@
 Ox_inventory = exports.ox_inventory
 local glm = require 'glm'
+local config = lib.load("data.config")
 
 RegisterServerEvent('ND_Police:deploySpikestrip', function(data)
     local count = Ox_inventory:Search(source, 'count', 'spikestrip')
@@ -74,4 +75,47 @@ end)
 RegisterNetEvent("ND_Police:shotspotter", function(location, coords)
     local src = source
     Bridge.shotSpotter(src, location, coords)
+end)
+
+RegisterNetEvent("ND_Police:impoundVehicle", function(netId, impoundReclaimPrice)
+    local src = source
+
+    if not impoundReclaimPrice or impoundReclaimPrice > config.maxImpoundPrice or impoundReclaimPrice < config.minImpoundPrice then
+        return Bridge.notify({
+            type = "error",
+            description = "Invalid impound reclaim price."
+        })
+    end
+
+    if not Bridge.hasJobs(src, config.policeGroups) then
+        return Bridge.notify({
+            type = "error",
+            description = "You don't have permission to do this."
+        })
+    end
+
+    local vehicle = NetworkGetEntityFromNetworkId(netId)
+
+    if not DoesEntityExist(vehicle) then
+        return Bridge.notify({
+            type = "error",
+            description = "Vehicle was not found, try again later."
+        })
+    end
+
+    local vehCoords = GetEntityCoords(vehicle)
+    local pedCoords = GetEntityCoords(GetPlayerPed(src))
+
+    if #(vehCoords-pedCoords) > 5 then
+        return Bridge.notify({
+            type = "error",
+            description = "You're too far away from the vehicle."
+        })
+    end
+    
+    if Bridge.impoundVehicle then
+        Bridge.impoundVehicle(netId, vehicle, impoundReclaimPrice)
+    elseif DoesEntityExist(vehicle) then
+        DeleteEntity(vehicle)
+    end
 end)

@@ -17,4 +17,22 @@ function bridge.shotSpotter(src, location, coords)
     })
 end
 
+function bridge.hasJobs(src, groups)
+    local player = NDCore:getPlayer(src)
+    if not player then return end
+
+    for i=1, #groups do
+        if player.groups[groups[i]] then
+            return true
+        end
+    end
+end
+
+function bridge.impoundVehicle(netId, entity, impoundReclaimPrice)
+    local vehicle = NDCore.getVehicle(entity)
+    if not vehicle then return end
+    vehicle.setMetadata("impoundReclaimPrice", impoundReclaimPrice)
+    vehicle.setStatus("impounded", true)
+end
+
 return bridge
