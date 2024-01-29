@@ -477,7 +477,7 @@ exports.ox_target:addGlobalPlayer({
         distance = 1.5,
         items = "zipties",
         canInteract = function(entity)
-            return canCuffPed(entity, "cuffs") and not IsPedCuffed(entity)
+            return canCuffPed(entity, "zipties") and not IsPedCuffed(entity)
         end,
         onSelect = function(data)
             local ped = data.entity
