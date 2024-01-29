@@ -36,15 +36,17 @@ local function setClothing(ped, clothing)
 end
 
 local function getLockerOptions(lockerOptions, menu)
-    local options = {
-        {
+    local options = {}
+
+    if GetResourceState("ND_AppearanceShops") == "started" then
+        options[#options+1] = {
             title = "View saved outfits",
             icon = "fa-solid fa-shirt",
             onSelect = function()
                 exports["ND_AppearanceShops"]:openWardrobe(menu)
             end
         }
-    }
+    end
 
     for i=1, #lockerOptions do
         local opt = lockerOptions[i]
