@@ -75,6 +75,7 @@ end
 
 AddEventHandler("ND_Police:playerJustShot", function(weaponData)
     local ammo = weaponData?.ammo
+    print(ammo)
     return ammo and startPedShooting(ammo)
 end)
 
@@ -131,7 +132,7 @@ RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence
         end
     end
 
-    -- for coords in pairs(clearEvidence) do
-    --     removeNode(coords)
-    -- end
+    for coords in pairs(clearEvidence) do
+        removeNode(coords)
+    end
 end)

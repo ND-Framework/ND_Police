@@ -3,7 +3,11 @@ local activeLoop = false
 
 AddEventHandler("ox_inventory:currentWeapon", function(weaponData)
     local ammo = weaponData?.ammo
-    if not ammo or activeLoop then return end
+    
+    if not ammo or activeLoop then
+        activeLoop = false
+        return
+    end
     
     activeLoop = true
 
