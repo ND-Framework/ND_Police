@@ -45,12 +45,15 @@ end)
 
 RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state)
     local src = source
-    target = Player(target)?.state
+    target = tonumber(target)
     if not target then return end
 
     local playerCoords = GetEntityCoords(GetPlayerPed(src))
     local targetCoords = GetEntityCoords(GetPlayerPed(target))
     if not playerCoords or not targetCoords or #(playerCoords-targetCoords) > 5 then return end
+
+    target = Player(target)?.state
+    if not target then return end
 
     target:set('isEscorted', state and src, true)
 end)
