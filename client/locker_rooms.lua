@@ -26,6 +26,13 @@ local clothingProps = {
 
 local function setClothing(ped, clothing)
     if not clothing then return end
+
+    for name, number in pairs(clothingProps) do
+        if clothing[name] and clothing[name].drawable < 0 then
+            ClearPedProp(ped, number)
+        end
+    end
+
     for component, clothingInfo in pairs(clothing) do
         if clothingComponents[component] then
             SetPedComponentVariation(ped, clothingComponents[component], clothingInfo.drawable, clothingInfo.texture, 0)
