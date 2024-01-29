@@ -7,7 +7,7 @@ function bridge.notify(src, info)
     player.notify(info)
 end
 
-function brdige.shotSpotter(src, location, coords)
+function bridge.shotSpotter(src, location, coords)
     if GetResourceState("ND_MDT") ~= "started" then return end
 
     exports["ND_MDT"]:createDispatch({

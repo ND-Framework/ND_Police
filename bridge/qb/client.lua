@@ -1,7 +1,7 @@
 local bridge = {}
 local QBCore = exports["qb-core"]:GetCoreObject()
 
-function Bridge.notify(info)
+function bridge.notify(info)
     lib.notify(info)
 end
 
@@ -22,7 +22,7 @@ function bridge.getPlayer()
     return QBCore.Functions.GetPlayerData()
 end
 
-function brdige.doesPlayerHaveJob(player, job)
+function bridge.doesPlayerHaveJob(player, job)
     return player and player.job.name == job
 end
 

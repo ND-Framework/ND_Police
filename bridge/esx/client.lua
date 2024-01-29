@@ -1,7 +1,7 @@
 local bridge = {}
 local ESX = exports["es_extended"]:getSharedObject()
 
-function Bridge.notify(info)
+function bridge.notify(info)
     lib.notify(info)
 end
 
@@ -20,7 +20,7 @@ function bridge.getPlayer()
     return ESX.GetPlayerData()
 end
 
-function brdige.doesPlayerHaveJob(player, job)
+function bridge.doesPlayerHaveJob(player, job)
     return player.job == job
 end
 

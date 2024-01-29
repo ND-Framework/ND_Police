@@ -4,7 +4,7 @@ function bridge.notify(src, info)
     TriggerClientEvent("ox_lib:notify", src, info)
 end
 
-function brdige.shotSpotter(src, location, coords)
+function bridge.shotSpotter(src, location, coords)
     -- note: add integration for dispatch resources
 end
 

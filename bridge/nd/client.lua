@@ -1,7 +1,7 @@
 local bridge = {}
 local NDCore = exports["ND_Core"]
 
-function brdige.notify(...)
+function bridge.notify(...)
     NDCore:notify(...)
 end
 
@@ -20,7 +20,7 @@ function bridge.getPlayer()
     return NDCore:getPlayer()
 end
 
-function brdige.doesPlayerHaveJob(player, job)
+function bridge.doesPlayerHaveJob(player, job)
     return player.groups[job]
 end
 
