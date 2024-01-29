@@ -115,7 +115,9 @@ RegisterNetEvent("ND_Police:impoundVehicle", function(netId, impoundReclaimPrice
     
     if Bridge.impoundVehicle then
         Bridge.impoundVehicle(netId, vehicle, impoundReclaimPrice)
-    elseif DoesEntityExist(vehicle) then
+    end
+    
+    if DoesEntityExist(vehicle) then
         DeleteEntity(vehicle)
     end
 end)
