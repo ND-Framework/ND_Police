@@ -43,41 +43,35 @@ RegisterServerEvent('ND_Police:retrieveSpikestrip', function(netId)
 end)
 
 RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state)
-    local player = NDCore.getPlayer(source)
-
-    if not player then return end
-
+    local src = source
     target = Player(target)?.state
-
     if not target then return end
 
-    target:set('isEscorted', state and source, true)
+    local playerCoords = GetEntityCoords(GetPlayerPed(src))
+    local targetCoords = GetEntityCoords(GetPlayerPed(target))
+    if not playerCoords or not targetCoords or #(playerCoords-targetCoords) > 5 then return end
+
+    target:set('isEscorted', state and src, true)
 end)
 
 RegisterNetEvent('ND_Police:gsrTest', function(target)
 	local src = source
 	local state = Player(target).state
-    local player = NDCore.getPlayer(src)
 
     if state.shot then
-        return player.notify({
+        return Bridge.notify(src, {
             type = 'success',
             description = 'Test comes back POSITIVE (Has Shot)'
         })
     end
 
-    player.notify({
+    Bridge.notify(src, {
         type = 'error',
         description = 'Test comes back NEGATIVE (Has Not Shot)'
     })
 end)
 
 RegisterNetEvent("ND_Police:shotspotter", function(location, coords)
-    if GetResourceState("ND_MDT") ~= "started" then return end
-
-    exports["ND_MDT"]:createDispatch({
-        location = location,
-        callDescription = "Shotspotter detected gunshot",
-        coords = coords
-    })
+    local src = source
+    Bridge.shotSpotter(src, location, coords)
 end)

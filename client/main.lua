@@ -16,7 +16,7 @@ AddEventHandler("ox_inventory:currentWeapon", function(weaponData)
     end
 end)
 
-AddEventHandler("ND:characterUnloaded", function()
+AddEventHandler("ND_Police:playerUnloaded", function()
     LocalPlayer.state:set('isCuffed', false, true)
     LocalPlayer.state:set('isEscorted', false, true)
 end)

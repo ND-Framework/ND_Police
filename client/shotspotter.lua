@@ -2,10 +2,10 @@ local data_shotspotter = lib.load("data.shotspotter")
 local lastTrigger = 0
 
 local function hasIgnoredJob()
-    local player = NDCore.getPlayer()
+    local player = Bridge.getPlayer()
     for i=1, #data_shotspotter.ignoredJobs do
         local job = data_shotspotter.ignoredJobs[i]
-        if player.groups[job] then
+        if Bridge.doesPlayerHaveJob(player, job) then
             return true
         end
     end

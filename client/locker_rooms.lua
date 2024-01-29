@@ -35,17 +35,6 @@ local function setClothing(ped, clothing)
     end
 end
 
-local function hasGroup(groups)
-    if not groups then return end
-
-    local player = NDCore.getPlayer()
-    for i=1, #groups do
-        if player.groups[groups[i]] then
-            return true
-        end
-    end
-end
-
 local function getLockerOptions(lockerOptions, menu)
     local options = {
         {
@@ -62,12 +51,12 @@ local function getLockerOptions(lockerOptions, menu)
         options[#options+1] = {
             title = opt.title,
             icon = "fa-solid fa-shirt",
-            disabled = not hasGroup(opt.groups),
+            disabled = not Bridge.hasGroup(opt.groups),
             onSelect = function()
                 local ped = cache.ped
                 local model = GetEntityModel(ped)
                 if model ~= `mp_m_freemode_01` and model ~= `mp_f_freemode_01` then
-                    return NDCore.notify({
+                    return Bridge.notify({
                         title = "Unable to set otufit",
                         description = "Your player model is not supported.",
                         type = "error",
@@ -77,7 +66,7 @@ local function getLockerOptions(lockerOptions, menu)
 
                 local clothing = opt.clothing[model == `mp_m_freemode_01` and "male" or "female"]
                 if not clothing then
-                    return NDCore.notify({
+                    return Bridge.notify({
                         title = "Unable to set otufit",
                         description = "Your player model is not supported.",
                         type = "error",
@@ -103,7 +92,7 @@ for locker, info in pairs(data_lockers) do
         })
 
         function point:onEnter()
-            self.canEnter = hasGroup(info.groups)
+            self.canEnter = Bridge.hasGroup(info.groups)
         end
          
         function point:nearby()

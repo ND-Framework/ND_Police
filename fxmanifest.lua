@@ -8,7 +8,8 @@ data_file "DLC_ITYP_REQUEST" "stream/cuffs_main.ytyp"
 files {
     "audiodata/nd_police.dat54.rel",
     "audiodirectory/nd_police.awc",
-    "data/**"
+    "data/**",
+    "bridge/**/client.lua"
 }
 
 data_file "AUDIO_WAVEPACK" "audiodirectory"
@@ -16,7 +17,7 @@ data_file "AUDIO_SOUNDDATA" "audiodata/nd_police.dat"
 
 shared_scripts {
     "@ox_lib/init.lua",
-    "@ND_Core/init.lua"
+    "shared/bridge.lua"
 }
 
 server_scripts {
