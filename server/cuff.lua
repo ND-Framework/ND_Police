@@ -60,6 +60,7 @@ RegisterNetEvent("ND_Police:syncAgressiveCuff", function(target, angle, cuffType
     local escaped = lib.callback.await("ND_Police:syncAgressiveCuff", target, angle, cuffType, heading)
     if escaped then return end
 
+    Player(target).state.handsUp = false
     Ox_inventory:RemoveItem(src, cuffType, 1, nil, slot)
 end)
 
@@ -72,6 +73,10 @@ end)
 RegisterNetEvent("ND_Police:uncuffPed", function(target, cuffType)
     local src = source
     if not uncuffCheck(src, target, cuffType) then return end
+
+    local playerCuffType = Player(target).state.cuffType or "cuffs"
+    if playerCuffType ~= cuffType then return end
+
     TriggerClientEvent("ND_Police:uncuffPed", target)
     Wait(500)
     Ox_inventory:AddItem(src, cuffType, 1)

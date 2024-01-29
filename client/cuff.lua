@@ -151,6 +151,7 @@ local function setCuffed(enabled, angle, cuffType)
         isCuffed = false
         local state = Player(cache.serverId).state
         state:set("isCuffed", false, true)
+        state:set("cuffType", false, true)
         exports.ox_target:disableTargeting(false)
         return
     end
@@ -165,6 +166,7 @@ local function setCuffed(enabled, angle, cuffType)
     local pos, rot = position.pos, position.rot
     local state = Player(cache.serverId).state
     state:set("isCuffed", true, true)
+    state:set("cuffType", cuffType, true)
     exports.ox_target:disableTargeting(true)
 
     local entity = CreateObject(model, 0, 0, 0, true, true, true)
@@ -491,7 +493,7 @@ exports.ox_target:addGlobalPlayer({
         distance = 1.5,
         items = "handcuffkey",
         canInteract = function(entity)
-            return IsPedCuffed(entity)
+            return IsPedCuffed(entity) and Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.cuffType == "cuffs"
         end,
         onSelect = function(data)
             uncuffPed(data.entity, "cuffs")
@@ -504,7 +506,7 @@ exports.ox_target:addGlobalPlayer({
         distance = 1.5,
         items = "tools",
         canInteract = function(entity)
-            return IsPedCuffed(entity)
+            return IsPedCuffed(entity) and Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.cuffType == "zipties"
         end,
         onSelect = function(data)
             uncuffPed(data.entity, "zipties")
