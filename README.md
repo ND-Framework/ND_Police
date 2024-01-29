@@ -86,3 +86,8 @@ If you want to PR a feature you should ask first (so you won't waste time).
 * Animation for player deploying.
 * If the player has one spike strip item it will be deployed.
 * If the player has more than one spike strip item then a menu will pop up asking how many they wish to use.
+
+**Impound:**
+* Police can impound any vehicle and it will be deleted.
+* If using NDCore poice will be able to select amount to charge for players to reclaim an impounded vehicle.
+
