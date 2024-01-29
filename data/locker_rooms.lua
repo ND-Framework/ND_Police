@@ -10,20 +10,25 @@ menus["lspd"] = {
     },
     options = {
         {
-            title = "Patrol",
+            title = "Patrol uniform",
             groups = {"lspd"},
             clothing = options.lspd_patrol
         },
         {
-            title = "SWAT",
+            title = "SWAT uniform",
             groups = {"swat"},
             clothing = options.lspd_swat
         },
         {
-            title = "K9",
+            title = "K9 uniform",
             groups = {"canine"},
             clothing = options.lspd_canine
         },
+        {
+            title = "Pilot uniform",
+            groups = {"police_pilot"},
+            clothing = options.lspd_pilot
+        }
     }
 }
 
