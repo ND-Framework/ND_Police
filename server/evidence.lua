@@ -70,7 +70,7 @@ RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
     for i = 1, #nodes do
         local coords = nodes[i]
 
-        table.merge(items, evidence[coords])
+        lib.table.merge(items, evidence[coords])
 
         clearEvidence[coords] = true
         evidence[coords] = nil

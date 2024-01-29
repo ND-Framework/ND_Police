@@ -32,7 +32,7 @@ local function createNode(ammo, item, coords, entity)
     }
 
     if createdEvidence[coords] then
-        table.merge(createdEvidence[coords], entry)
+        lib.table.merge(createdEvidence[coords], entry)
     else
         createdEvidence[coords] = entry
     end
