@@ -81,6 +81,7 @@ local function toggleHandsUp(status, animType)
     local state = Player(cache.serverId).state
     if state.gettingCuffed or state.isCuffed or state.isCuffing then return end 
 
+    exports.ox_target:disableTargeting(status)
     state:set("handsUp", status, true)
     handsUpStatus = status
     local ped = cache.ped
@@ -150,6 +151,7 @@ local function setCuffed(enabled, angle, cuffType)
         isCuffed = false
         local state = Player(cache.serverId).state
         state:set("isCuffed", false, true)
+        exports.ox_target:disableTargeting(false)
         return
     end
 
@@ -163,6 +165,7 @@ local function setCuffed(enabled, angle, cuffType)
     local pos, rot = position.pos, position.rot
     local state = Player(cache.serverId).state
     state:set("isCuffed", true, true)
+    exports.ox_target:disableTargeting(true)
 
     local entity = CreateObject(model, 0, 0, 0, true, true, true)
     AttachEntityToEntity(entity, ped, GetPedBoneIndex(ped, 0x49D9), pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, true, true, false, true, 1, true)
