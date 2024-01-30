@@ -49,10 +49,6 @@ local function uncuffCheck(src, target, cuffType)
         targetState.isCuffed
 end
 
-local function isItemCorrect()
-    cuffType:find("zipties")
-end
-
 RegisterNetEvent("ND_Police:syncAgressiveCuff", function(target, angle, cuffType, slot, heading)
     local src = source
     if not cuffCheck(src, target, cuffType) then return end
