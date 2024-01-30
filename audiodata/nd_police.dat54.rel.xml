@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<Dat54>
+  <Version value="7314721"/>
+  <ContainerPaths>
+    <Item>audiodirectory\nd_police</Item>
+  </ContainerPaths>
+  <Items>
+    <Item type="SimpleSound">
+      <Name>cuff_sp</Name>
+      <Header>
+        <Flags value="0x00008004"/>
+        <Volume value="200"/>
+        <Category>scripted</Category>
+      </Header>
+      <ContainerName>audiodirectory/nd_police</ContainerName>
+      <FileName>cuff</FileName>
+      <WaveSlotNum value="0"/>
+    </Item>
+    <Item type="SimpleSound">
+      <Name>uncuff_sp</Name>
+      <Header>
+        <Flags value="0x00008004"/>
+        <Volume value="200"/>
+        <Category>scripted</Category>
+      </Header>
+      <ContainerName>audiodirectory/nd_police</ContainerName>
+      <FileName>uncuff</FileName>
+      <WaveSlotNum value="0"/>
+    </Item>
+    <Item type="SimpleSound">
+      <Name>unzip_sp</Name>
+      <Header>
+        <Flags value="0x00008004"/>
+        <Volume value="200"/>
+        <Category>scripted</Category>
+      </Header>
+      <ContainerName>audiodirectory/nd_police</ContainerName>
+      <FileName>unzip</FileName>
+      <WaveSlotNum value="0"/>
+    </Item>
+    <Item type="SimpleSound">
+      <Name>zip_sp</Name>
+      <Header>
+        <Flags value="0x00008004"/>
+        <Volume value="200"/>
+        <Category>scripted</Category>
+      </Header>
+      <ContainerName>audiodirectory/nd_police</ContainerName>
+      <FileName>zip</FileName>
+      <WaveSlotNum value="0"/>
+    </Item>
+    <Item type="SoundSet">
+      <Name>nd_police_soundset</Name>
+      <Header>
+        <Flags value="0xAAAAAAAA"/>
+      </Header>
+      <SoundSets>
+        <Item>
+          <ScriptName>cuff</ScriptName>
+          <ChildSound>cuff_sp</ChildSound>
+        </Item>
+        <Item>
+          <ScriptName>uncuff</ScriptName>
+          <ChildSound>uncuff_sp</ChildSound>
+        </Item>
+        <Item>
+          <ScriptName>unzip</ScriptName>
+          <ChildSound>unzip_sp</ChildSound>
+        </Item>
+        <Item>
+          <ScriptName>zip</ScriptName>
+          <ChildSound>zip_sp</ChildSound>
+        </Item>
+      </SoundSets>
+    </Item>
+  </Items>
+</Dat54>

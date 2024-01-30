@@ -1,4 +1,8 @@
 local createdEvidence = {}
+local glm = require 'glm'
+local activeLoop = false
+local evidence = {}
+local evidenceMetadata = lib.load("data.evidence")
 
 CreateThread(function()
     while true do
@@ -12,10 +16,8 @@ CreateThread(function()
     end
 end)
 
-local ammo
-local glm = require 'glm'
 
-local function createNode(item, coords, entity)
+local function createNode(ammo, item, coords, entity)
     if entity then
         coords = glm.snap(GetOffsetFromEntityGivenWorldCoords(entity, coords.x, coords.y, coords.z), vec3(1 / 2 ^ 4))
         coords = vec4(coords, NetworkGetNetworkIdFromEntity(entity))
@@ -30,58 +32,52 @@ local function createNode(item, coords, entity)
     }
 
     if createdEvidence[coords] then
-        table.merge(createdEvidence[coords], entry)
+        lib.table.merge(createdEvidence[coords], entry)
     else
         createdEvidence[coords] = entry
     end
 end
 
-local activeLoop = false
-
-AddEventHandler('ox_inventory:currentWeapon', function(weaponData)
-    ammo = weaponData?.ammo
-
-    if ammo and not activeLoop then
-        activeLoop = true
-
-        while true do
-            Wait(0)
-
-            if IsPedShooting(cache.ped) then
-                local hit, entityHit, endCoords = lib.raycast.cam(tonumber('000111111', 2), 7, 50)
-
-                if hit then
-                    if GetEntityType(entityHit) == 0 then
-                        createNode('slug', endCoords)
-                    elseif NetworkGetEntityIsNetworked(entityHit) then
-                        createNode('slug', endCoords, entityHit)
-                    end
-
-                    Wait(100)
-
-                    local pedCoords = GetEntityCoords(cache.ped)
-                    local direction = math.rad(math.random(360))
-                    local magnitude = math.random(100) / 20
-
-                    local coords = vec3(pedCoords.x + math.sin(direction) * magnitude, pedCoords.y + math.cos(direction) * magnitude, pedCoords.z)
-
-                    local success, impactZ = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z, true)
-
-                    if success then
-                        createNode('case', vector3(coords.xy, impactZ))
-                    end
-                end
-            end
-
-            if not ammo then
-                activeLoop = false
-                break
-            end
-        end
+local function startPedShooting(ammo)
+    local hit, entityHit, endCoords = lib.raycast.cam(tonumber('000111111', 2), 7, 50)
+    if not hit then goto skip end
+    
+    local evidenceInfo = evidenceMetadata[ammo]
+    if not evidenceInfo then
+        goto skip
+    elseif not evidenceInfo.projectile then
+        goto next
     end
-end)
+    
+    if GetEntityType(entityHit) == 0 then
+        createNode(ammo, 'projectile', endCoords)
+    elseif NetworkGetEntityIsNetworked(entityHit) then
+        createNode(ammo, 'projectile', endCoords, entityHit)
+    end
 
-local evidence = {}
+    Wait(100)
+    ::next::
+
+    if not evidenceInfo.casing then goto skip end
+
+    local pedCoords = GetEntityCoords(cache.ped)
+    local direction = math.rad(math.random(360))
+    local magnitude = math.random(100) / 20
+    local coords = vec3(pedCoords.x + math.sin(direction) * magnitude, pedCoords.y + math.cos(direction) * magnitude, pedCoords.z)
+    local success, impactZ = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z, true)
+
+    if success then
+        createNode(ammo, 'casing', vector3(coords.xy, impactZ))
+    end
+
+    ::skip::
+end
+
+AddEventHandler("ND_Police:playerJustShot", function(weaponData)
+    local ammo = weaponData?.ammo
+    print(ammo)
+    return ammo and startPedShooting(ammo)
+end)
 
 local function removeNode(coords)
     if evidence[coords] then
@@ -94,16 +90,6 @@ local function removeNode(coords)
         evidence[coords] = nil
     end
 end
-
-local evidenceOption
-
-CreateThread(function()
-    while true do
-        Wait(0)
-
-        evidenceOption = nil
-    end
-end)
 
 RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence)
     for coords in pairs(addEvidence) do
@@ -120,14 +106,6 @@ RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence
                         offsetSize = 1 / 2 ^ 3,
                         absoluteOffset = true,
                         offset = coords.w and coords.xyz,
-                        canInteract = function(entity, distance, coords, name, bone)
-                            if evidenceOption then
-                                return false
-                            else
-                                evidenceOption = true
-                                return true
-                            end
-                        end,
                         onSelect = function(data)
                             local nodes = {}
                             local targetCoords = data.coords

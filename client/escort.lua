@@ -1,6 +1,16 @@
 local playerState = LocalPlayer.state
 
+function StopEscortPlayer(serverId)
+    TriggerServerEvent('ND_Police:setPlayerEscort', serverId, false)
+    LocalPlayer.state.blockHandsUp = false
+    StopAnimTask(cache.ped, "amb@world_human_drinking@coffee@female@base", "base", 2.0)
+end
+
 local function escortPlayer(ped, id)
+    lib.requestAnimDict("amb@world_human_drinking@coffee@female@base")
+    TaskPlayAnim(cache.ped, "amb@world_human_drinking@coffee@female@base", "base", 8.0, 8.0, -1, 50, 0, false, false, false)
+    LocalPlayer.state.blockHandsUp = true
+
     if not id then
         id = NetworkGetPlayerIndexFromPed(ped)
     end
@@ -26,13 +36,14 @@ exports.ox_target:addGlobalPlayer({
     },
     {
         name = 'release',
+        icon = 'fas fa-hands-bound',
         label = 'Release',
         distance = 1.5,
         canInteract = function(entity)
             return IsPedCuffed(entity) and IsEntityAttachedToEntity(entity, cache.ped) and not playerState.invBusy
         end,
         onSelect = function(data)
-            escortPlayer(data.entity)
+            StopEscortPlayer(GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)))
         end
     },
 })
@@ -57,7 +68,7 @@ local function setEscorted(serverId)
         if not ped then break end
 
         if not IsEntityAttachedToEntity(cache.ped, ped) then
-            AttachEntityToEntity(cache.ped, ped, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, true, true, 2, true)
+            AttachEntityToEntity(cache.ped, ped, 11816, 0.38, 0.4, 0.0, 0.0, 0.0, 0.0, false, false, true, true, 2, true)
         end
 
         if IsPedWalking(ped) then
@@ -88,6 +99,8 @@ AddStateBagChangeHandler('isEscorted', ('player:%s'):format(cache.serverId), fun
 
     if IsEntityAttached(cache.ped) then
         DetachEntity(cache.ped, true, false)
+        StopAnimTask(cache.ped, 'anim@move_m@prisoner_cuffed', 'walk', -8.0)
+        StopAnimTask(cache.ped, 'anim@move_m@trash', 'run', -8.0)
     end
 
     if value then setEscorted(value) end

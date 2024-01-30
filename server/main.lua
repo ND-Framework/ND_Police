@@ -1,135 +1,17 @@
-local players = {}
-local table = lib.table
-
-CreateThread(function()
-    for _, player in pairs(NDCore.getPlayers("job", "lspd", true)) do
-        local inService = Player(source).state.InServic
-        print(inService)
-        if inService then
-            players[player.source] = player
-        end
-    end
-end)
-
-RegisterNetEvent('ND:setPlayerInService', function(group)
-    local player = NDCore.getPlayer(source)
-    local service = Player(source).state.InServic
-    print(group)
-    if player then
-        if group == false then
-            players[source] = player
-       
-            Player(source).state.InService = group
-        else
-
-            Player(source).state.InService = group
-        end
-        print(service)
-    end
-
-    players[source] = nil
-end)
-
-AddEventHandler("ND:characterUnloaded", function(source, target)
-    players[source] = nil
-end)
-
-AddEventHandler("ND:characterLoaded", function(character)
-    Player(character).state.InService = false
-end)
-
-lib.callback.register('ND_Police:isPlayerInService', function(source, target)
-    return players[target or source]
-end)
-
-
-lib.callback.register('ND_Police:setPlayerCuffs', function(source, target)
-    local player = NDCore.getPlayer(source)
-
-    if not player then return end
-
-    target = Player(target)?.state
-
-    if not target then return end
-
-    local state = not target.isCuffed
-
-    target:set('isCuffed', state, true)
-
-    return state
-end)
-
-RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state)
-    local player = NDCore.getPlayer(source)
-
-    if not player then return end
-
-    target = Player(target)?.state
-
-    if not target then return end
-
-    target:set('isEscorted', state and source, true)
-end)
-
-local evidence = {}
-local addEvidence = {}
-local clearEvidence = {}
-
-CreateThread(function()
-    while true do
-        Wait(1000)
-
-        if next(addEvidence) or next(clearEvidence) then
-            TriggerClientEvent('ND_Police:updateEvidence', -1, addEvidence, clearEvidence)
-
-            table.wipe(addEvidence)
-            table.wipe(clearEvidence)
-        end
-    end
-end)
-
-RegisterServerEvent('ND_Police:distributeEvidence', function(nodes)
-    for coords, items in pairs(nodes) do
-        if evidence[coords] then
-            lib.table.merge(evidence[coords], items)
-        else
-            evidence[coords] = items
-            addEvidence[coords] = true
-        end
-    end
-end)
-
-RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
-    local items = {}
-
-    for i = 1, #nodes do
-        local coords = nodes[i]
-
-        table.merge(items, evidence[coords])
-
-        clearEvidence[coords] = true
-        evidence[coords] = nil
-    end
-
-    for item, data in pairs(items) do
-        for type, count in pairs(data) do
-            exports.ox_inventory:AddItem(source, item, count, type)
-        end
-    end
-
-    lib.notify(source, {type = 'success', title = 'Evidence collected'})
-end)
+Ox_inventory = exports.ox_inventory
+local glm = require 'glm'
+local config = lib.load("data.config")
 
 RegisterServerEvent('ND_Police:deploySpikestrip', function(data)
-    local count = exports.ox_inventory:Search(source, 'count', 'spikestrip')
+    local count = Ox_inventory:Search(source, 'count', 'spikestrip')
 
     if count < data.size then return end
 
-    exports.ox_inventory:RemoveItem(source, 'spikestrip', data.size)
+    Ox_inventory:RemoveItem(source, 'spikestrip', data.size)
 
     local dir = glm.direction(data.segment[1], data.segment[2])
 
-    for i = 1, data.size do
+    for i = data.size, 1, -1 do
         local coords = glm.segment.getPoint(data.segment[1], data.segment[2], (i * 2 - 1) / (data.size * 2))
         local object = CreateObject(`p_ld_stinger_s`, coords.x, coords.y, coords.z, true, true, true)
 
@@ -139,6 +21,7 @@ RegisterServerEvent('ND_Police:deploySpikestrip', function(data)
 
         SetEntityRotation(object, math.deg(-math.sin(dir.z)), 0.0, math.deg(math.atan(dir.y, dir.x)) + 90, 2, false)
         Entity(object).state:set('inScope', true, true)
+        Wait(800)
     end
 end)
 
@@ -153,85 +36,91 @@ RegisterServerEvent('ND_Police:retrieveSpikestrip', function(netId)
 
     if #(pedPos - spikePos) > 5 then return end
 
-    if not exports.ox_inventory:CanCarryItem(source, 'spikestrip', 1) then return end
+    if not Ox_inventory:CanCarryItem(source, 'spikestrip', 1) then return end
 
     DeleteEntity(spike)
 
-    exports.ox_inventory:AddItem(source, 'spikestrip', 1)
+    Ox_inventory:AddItem(source, 'spikestrip', 1)
 end)
 
-AddEventHandler('ND:playerLoaded', function(source, userid, charid) 
-    local playerId = NDCore.getPlayer(source)
-	MySQL.query('SELECT sentence FROM characters WHERE charid = @charid', {
-		['@charid'] = charid,
-	}, function (result)
-		local remaining = result[1].sentence
-        Player(source).state:set('sentence', remaining, true)
-        TriggerEvent('server:beginSentence', playerId.source , remaining, true )
-	end)
+RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state)
+    local src = source
+    target = tonumber(target)
+    if not target then return end
 
+    local playerCoords = GetEntityCoords(GetPlayerPed(src))
+    local targetCoords = GetEntityCoords(GetPlayerPed(target))
+    if not playerCoords or not targetCoords or #(playerCoords-targetCoords) > 5 then return end
+
+    target = Player(target)?.state
+    if not target then return end
+
+    target:set('isEscorted', state and src, true)
 end)
 
----@param id string
----@param sentence string
----@param resume boolean
-RegisterServerEvent('server:beginSentence',function(id, sentence, resume)
-    if sentence == 0 then return end
-    local playerId = ND.GetPlayer(id)
-    
-	MySQL.update.await('UPDATE characters SET sentence = @sentence WHERE charid = @charid', {
-		['@sentence'] = sentence,		
-		['@charid']   = playerId.charid,
-	}, function(rowsChanged)
-	end)
+RegisterNetEvent('ND_Police:gsrTest', function(target)
+	local src = source
+	local state = Player(target).state
 
-    TriggerClientEvent('ox_lib:notify', id, {
-        title = 'Jailed',
-        description = 'You have been sentenced to ' .. sentence .. ' minutes.',
-        type = 'inform'
-    })
-    if not resume then
-        exports.ox_inventory:ConfiscateInventory(id)
+    if state.shot then
+        return Bridge.notify(src, {
+            type = 'success',
+            description = 'Test comes back POSITIVE (Has Shot)'
+        })
     end
 
-	TriggerClientEvent('sendToJail', id, sentence)
+    Bridge.notify(src, {
+        type = 'error',
+        description = 'Test comes back NEGATIVE (Has Not Shot)'
+    })
 end)
 
----@param target string
----@param sentence string
-RegisterServerEvent('updateSentence',function(sentence, target)
-    local playerId = ND.GetPlayer(target)
-
-	MySQL.update.await('UPDATE characters SET sentence = @sentence WHERE charid = @charid', {
-		['@sentence'] = sentence,		
-		['@charid']   = playerId.charid,
-	}, function(rowsChanged)
-        Player(source).state:set('sentence', sentence, true)
-	end)
-
-	if sentence <= 0 then
-		if target ~= nil then
-            SetEntityCoords(target, Config.unJailCoords.x, Config.unJailCoords.y, Config.unJailCoords.z)
-            SetEntityHeading( target, Config.unJailHeading)
-            exports.ox_inventory:ReturnInventory(target)
-            TriggerClientEvent('ox_lib:notify', target, {
-                title = 'Jail',
-                description = 'Your sentence has ended.',
-                type = 'inform'
-            })
-		end
-
-	end
-
+RegisterNetEvent("ND_Police:shotspotter", function(location, coords)
+    local src = source
+    Bridge.shotSpotter(src, location, coords)
 end)
 
-RegisterNetEvent('gsrTest', function(target)
-	local src = source
-	local ply = Player(target)
-	if ply.state.shot == true then
-        TriggerClientEvent('ox_lib:notify', src, {type = 'success', description = 'Test comes back POSITIVE (Has Shot)'})
-	else
-        TriggerClientEvent('ox_lib:notify', src, {type = 'error', description = 'Test comes back NEGATIVE (Has Not Shot)'})
-	end
-end)
+RegisterNetEvent("ND_Police:impoundVehicle", function(netId, impoundReclaimPrice)
+    local src = source
 
+    if not impoundReclaimPrice or impoundReclaimPrice > config.maxImpoundPrice or impoundReclaimPrice < config.minImpoundPrice then
+        return Bridge.notify({
+            type = "error",
+            description = "Invalid impound reclaim price."
+        })
+    end
+
+    if not Bridge.hasJobs(src, config.policeGroups) then
+        return Bridge.notify({
+            type = "error",
+            description = "You don't have permission to do this."
+        })
+    end
+
+    local vehicle = NetworkGetEntityFromNetworkId(netId)
+
+    if not DoesEntityExist(vehicle) then
+        return Bridge.notify({
+            type = "error",
+            description = "Vehicle was not found, try again later."
+        })
+    end
+
+    local vehCoords = GetEntityCoords(vehicle)
+    local pedCoords = GetEntityCoords(GetPlayerPed(src))
+
+    if #(vehCoords-pedCoords) > 5 then
+        return Bridge.notify({
+            type = "error",
+            description = "You're too far away from the vehicle."
+        })
+    end
+    
+    if Bridge.impoundVehicle then
+        Bridge.impoundVehicle(netId, vehicle, impoundReclaimPrice)
+    end
+    
+    if DoesEntityExist(vehicle) then
+        DeleteEntity(vehicle)
+    end
+end)

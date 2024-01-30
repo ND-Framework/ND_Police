@@ -73,8 +73,8 @@ exports('deploySpikestrip', function()
         },
     }) then
         local segment = {
-            GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 1.0, 0.0),
-            GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 4.15 * size - 1, 0.0)
+            GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 4.15 * size - 1, 0.0),
+            GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 1.0, 0.0)
         }
         local length = glm.snap(#(segment[1] - segment[2]), 0.01)
 
@@ -140,7 +140,10 @@ AddStateBagChangeHandler('inScope', '', function(bagName, key, value, reserved, 
         local coords = GetEntityCoords(entity)
         local segment
 
+        lib.requestAnimDict("p_ld_stinger_s")
+        PlayEntityAnim(entity, "P_Stinger_S_Deploy", "p_ld_stinger_s", 1000.0, false, true, false, 0.0, 0)
         while DoesEntityExist(entity) do
+            
             local sleep = 500
             local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 10.0, 0, flags)
 
