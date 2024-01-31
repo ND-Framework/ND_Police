@@ -18,8 +18,8 @@
 ## Credits
 - [Overextended](https://github.com/overextended) for creating [ox_police](https://github.com/overextended/ox_police) which this was originally based on.
 - [Testaross](https://github.com/Testaross) for beginning this project and contributing a lot to this and ox_police.
-- [Hakko](https://github.com/hakkodevelopment) for doing the audio setup.
-- Florek for the props.
+- [Hakko](https://github.com/hakkodevelopment) for converting sounds to native audio.
+- Florek for resizing and modifying the props.
 
 Everything from ox_police has been completely rewritten besides `client/evidence.lua`, `client/spikes.lua`, and `client/escort.lua` which have minimal changes from the original ox_police.
 
