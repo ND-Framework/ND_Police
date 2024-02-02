@@ -1,5 +1,6 @@
 local isCuffed = false
 local currentCuffType = "cuffs"
+local npwd = GetResourceState("npwd") == "started"
 
 local cuffSounds = {
     cuffs = {"cuff", "uncuff"},
@@ -80,6 +81,10 @@ end
 local function toggleHandsUp(status, animType)
     local state = Player(cache.serverId).state
     if state.gettingCuffed or state.isCuffed or state.isCuffing then return end 
+
+    if npwd then
+        exports.npwd:setPhoneDisabled(status)
+    end
 
     exports.ox_target:disableTargeting(status)
     state:set("handsUp", status, true)
@@ -168,7 +173,7 @@ local function setCuffed(enabled, angle, cuffType)
         state:set("isCuffed", false, true)
         state:set("cuffType", false, true)
         exports.ox_target:disableTargeting(false)
-        return
+        return npwd and exports.npwd:setPhoneDisabled(false)
     end
 
     toggleHandsUp(false)
@@ -185,6 +190,10 @@ local function setCuffed(enabled, angle, cuffType)
     state:set("isCuffed", true, true)
     state:set("cuffType", cuffType, true)
     exports.ox_target:disableTargeting(true)
+
+    if npwd then
+        exports.npwd:setPhoneDisabled(true)
+    end
 
     local entity = CreateObject(model, 0, 0, 0, true, true, true)
     AttachEntityToEntity(entity, ped, GetPedBoneIndex(ped, 0x49D9), pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, true, true, false, true, 1, true)
