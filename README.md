@@ -39,6 +39,7 @@ If you want to PR a feature, you should ask first (so you won't waste time).
 * Click once to put hands up.
 * Hold for ~3 seconds to put hands up and kneel.
 * Click once to cancel.
+* search players when cuffed or hands up
 
 **Cuffs/zipties:**
 * Unique zipties & cuffs props.
@@ -56,6 +57,7 @@ If you want to PR a feature, you should ask first (so you won't waste time).
 * Person dragging will play an animation holding the player being dragged.
 * Person being dragged will have their legs animated when the dragging player walks/runs.
 * Uncuffing/removing zipties will release the player from being dragged.
+* put player in vehicle
 
 **Evidence:**
 * Shooting will drop ammo casings on the ground around the player.
