@@ -85,6 +85,7 @@ local function toggleHandsUp(status, animType)
     if npwd then
         exports.npwd:setPhoneDisabled(status)
     end
+
     exports.ox_target:disableTargeting(status)
     state:set("handsUp", status, true)
     handsUpStatus = status
@@ -157,9 +158,7 @@ local function setCuffed(enabled, angle, cuffType)
         state:set("isCuffed", false, true)
         state:set("cuffType", false, true)
         exports.ox_target:disableTargeting(false)
-        if not npwd then return end
-        exports.npwd:setPhoneDisabled(false)
-        return
+        return npwd and exports.npwd:setPhoneDisabled(false)
     end
 
     local ped = cache.ped
@@ -174,6 +173,7 @@ local function setCuffed(enabled, angle, cuffType)
     state:set("isCuffed", true, true)
     state:set("cuffType", cuffType, true)
     exports.ox_target:disableTargeting(true)
+
     if npwd then
         exports.npwd:setPhoneDisabled(true)
     end
