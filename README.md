@@ -4,7 +4,7 @@
     </a>
 </p>
 
-<p align="center"><b><a href="https://ndcore.dev/">Documentation</a></b>
+<p align="center"><b><a href="https://ndcore.dev/addons/police">Documentation</a></b>
 
 <div align="center">
     <a href="https://discord.gg/Z9Mxu72zZ6" target="_blank">
