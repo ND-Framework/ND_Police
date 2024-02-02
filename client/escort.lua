@@ -33,7 +33,7 @@ local function nearbySeatVehicleCheck(ped)
 
     local coords = GetEntityCoords(ped)
     local veh = lib.getClosestVehicle(coords, 2.0)
-    nearBySeatStatus = DoesEntityExist(veh) and AreAnyVehicleSeatsFree(veh)
+    nearBySeatStatus = DoesEntityExist(veh) and AreAnyVehicleSeatsFree(veh) and GetVehicleDoorLockStatus(veh) ~= 2
 
     return nearBySeatStatus
 end
