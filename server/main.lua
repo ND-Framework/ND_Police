@@ -43,19 +43,28 @@ RegisterServerEvent('ND_Police:retrieveSpikestrip', function(netId)
     Ox_inventory:AddItem(source, 'spikestrip', 1)
 end)
 
-RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state)
+RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state, setIntoVeh, setIntoSeat)
     local src = source
     target = tonumber(target)
     if not target then return end
 
     local playerCoords = GetEntityCoords(GetPlayerPed(src))
-    local targetCoords = GetEntityCoords(GetPlayerPed(target))
+    local targetPed = GetPlayerPed(target)
+    local targetCoords = GetEntityCoords(targetPed)
     if not playerCoords or not targetCoords or #(playerCoords-targetCoords) > 5 then return end
 
     target = Player(target)?.state
+    
     if not target then return end
-
     target:set('isEscorted', state and src, true)
+
+    if not setIntoVeh or not setIntoSeat then return end
+    Wait(500)
+
+    local veh = NetworkGetEntityFromNetworkId(setIntoVeh)
+    if not DoesEntityExist(veh) then return end
+
+    SetPedIntoVehicle(targetPed, veh, setIntoSeat)
 end)
 
 RegisterNetEvent('ND_Police:gsrTest', function(target)

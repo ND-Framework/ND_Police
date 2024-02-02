@@ -99,6 +99,18 @@ local function toggleHandsUp(status, animType)
 
         if not handsUpStatus then return end
         TaskPlayAnim(ped, anim.dict, anim.name, blendIn, 8.0, -1, flag, 0, false, false, false)
+
+        DisablePlayerFiring(cache.playerId, true)
+        lib.disableControls:Add(140, 141, 142, 25, 24, 257)
+        LocalPlayer.state.invBusy = true
+        
+        CreateThread(function()
+            while handsUpStatus do
+                Wait(0)
+                lib.disableControls()
+            end
+        end)
+
         return RemoveAnimDict(anim.dict)
     end
 
@@ -107,6 +119,9 @@ local function toggleHandsUp(status, animType)
             StopAnimTask(ped, anim.dict, anim.name, 4.0)
         end
     end
+    DisablePlayerFiring(cache.playerId, false)
+    lib.disableControls:Remove(140, 141, 142, 25, 24, 257)
+    LocalPlayer.state.invBusy = false
 end
 
 local function playsound(entity, sound)
@@ -155,6 +170,8 @@ local function setCuffed(enabled, angle, cuffType)
         exports.ox_target:disableTargeting(false)
         return
     end
+
+    toggleHandsUp(false)
 
     local ped = cache.ped
     local model = cuffModels[cuffType]
@@ -439,7 +456,7 @@ lib.addKeybind({
     description = "Hands up",
     defaultKey = "X",
     onPressed = function(self)
-        if not handsUpStatus and cache.vehicle or LocalPlayer.state.blockHandsUp then return end
+        if not handsUpStatus and cache.vehicle or not handsUpStatus and LocalPlayer.state.blockHandsUp then return end
 
         holdingHands = true
         local time = GetCloudTimeAsInt()
@@ -512,4 +529,22 @@ exports.ox_target:addGlobalPlayer({
             uncuffPed(data.entity, "zipties")
         end
     },
+    {
+        name = "ND_Police:searchPlayer",
+        icon = "fa-solid fa-magnifying-glass",
+        label = "Search",
+        distance = 1.5,
+        canInteract = function(entity)
+            if handsUpStatus or LocalPlayer.state.invBusy then return end
+            local targetPlayer = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))
+            local state = Player(targetPlayer).state
+            return state.isCuffed or state.handsUp
+        end,
+        onSelect = function(data)
+            local targetPlayer = GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity))
+            if not targetPlayer then return end
+            
+            exports.ox_inventory:openInventory("player", targetPlayer)
+        end
+    }
 })

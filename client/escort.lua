@@ -1,7 +1,12 @@
 local playerState = LocalPlayer.state
+local lastNearbySeatCheck = 0
+local nearBySeatStatus = false
 
-function StopEscortPlayer(serverId)
-    TriggerServerEvent('ND_Police:setPlayerEscort', serverId, false)
+local IsPedCuffed = IsPedCuffed
+local IsEntityAttachedToEntity = IsEntityAttachedToEntity
+
+function StopEscortPlayer(serverId, setIntoVeh, setIntoSeat)
+    TriggerServerEvent('ND_Police:setPlayerEscort', serverId, false, setIntoVeh, setIntoSeat)
     LocalPlayer.state.blockHandsUp = false
     StopAnimTask(cache.ped, "amb@world_human_drinking@coffee@female@base", "base", 2.0)
 end
@@ -18,8 +23,20 @@ local function escortPlayer(ped, id)
     TriggerServerEvent('ND_Police:setPlayerEscort', GetPlayerServerId(id), not IsEntityAttachedToEntity(ped, cache.ped))
 end
 
-local IsPedCuffed = IsPedCuffed
-local IsEntityAttachedToEntity = IsEntityAttachedToEntity
+local function nearbySeatVehicleCheck(ped)
+    local time = GetCloudTimeAsInt()
+    if time-lastNearbySeatCheck < 1 then
+        return nearBySeatStatus
+    end
+
+    lastNearbySeatCheck = time
+
+    local coords = GetEntityCoords(ped)
+    local veh = lib.getClosestVehicle(coords, 2.0)
+    nearBySeatStatus = DoesEntityExist(veh) and AreAnyVehicleSeatsFree(veh) and GetVehicleDoorLockStatus(veh) ~= 2
+
+    return nearBySeatStatus
+end
 
 exports.ox_target:addGlobalPlayer({
     {
@@ -44,6 +61,41 @@ exports.ox_target:addGlobalPlayer({
         end,
         onSelect = function(data)
             StopEscortPlayer(GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)))
+        end
+    },
+    {
+        name = "ND_Police:vehicleEscort",
+        icon = "fa-solid fa-right-to-bracket",
+        label = "Place in vehicle",
+        distance = 1.5,
+        canInteract = function(entity)
+            local ped = cache.ped
+            return IsPedCuffed(entity) and IsEntityAttachedToEntity(entity, ped) and not playerState.invBusy and nearbySeatVehicleCheck(ped)
+        end,
+        onSelect = function(data)
+            local coords = GetEntityCoords(cache.ped)
+            local veh = lib.getClosestVehicle(coords, 2.0)
+            if not DoesEntityExist(veh) or not AreAnyVehicleSeatsFree(veh) then return end
+
+            local bones = {"seat_dside_r", "seat_pside_r"}
+            local closestDist = nil
+            local closestSeat = nil
+
+            for i=1, #bones do
+                local dist = #(coords - GetEntityBonePosition_2(veh, GetEntityBoneIndexByName(veh, bones[i])))
+                if (not closestDist or not closestSeat or dist < closestDist) and IsVehicleSeatFree(veh, i) then
+                    closestSeat = i
+                    closestDist = dist
+                end
+            end
+
+            if not closestSeat and IsVehicleSeatFree(veh, 0) then
+                closestSeat = 0
+            elseif not closestSeat then
+                return
+            end
+
+            StopEscortPlayer(GetPlayerServerId(NetworkGetPlayerIndexFromPed(data.entity)), VehToNet(veh), closestSeat)
         end
     },
 })

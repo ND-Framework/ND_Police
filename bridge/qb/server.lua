@@ -1,4 +1,5 @@
 local bridge = {}
+local QBCore = exports["qb-core"]:GetCoreObject()
 
 function bridge.notify(src, info)
     TriggerClientEvent("ox_lib:notify", src, info)
