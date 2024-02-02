@@ -10,7 +10,7 @@ function bridge.hasGroup(groups)
 
     local player = ESX.GetPlayerData()
     for i=1, #groups do
-        if player.job == groups[i] then
+        if player.job.name == groups[i] then
             return true
         end
     end
@@ -21,7 +21,7 @@ function bridge.getPlayer()
 end
 
 function bridge.doesPlayerHaveJob(player, job)
-    return player.job == job
+    return player.job.name == job
 end
 
 return bridge
