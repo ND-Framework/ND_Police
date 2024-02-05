@@ -1,5 +1,6 @@
 local bridgeResources = {
     ["ND_Core"] = "nd",
+    ["ox_core"] = "ox",
     ["es_extended"] = "esx",
     ["qb-core"] = "qb"
 }
