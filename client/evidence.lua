@@ -1,6 +1,5 @@
 local createdEvidence = {}
 local glm = require 'glm'
-local activeLoop = false
 local evidence = {}
 local evidenceMetadata = lib.load("data.evidence")
 

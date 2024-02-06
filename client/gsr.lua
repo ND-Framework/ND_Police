@@ -1,5 +1,4 @@
 local timeEnteredWater = 0
-local inWater = false
 
 local function checkGsr(state)
     local shot, lastShot = state.shot, state.lastShot

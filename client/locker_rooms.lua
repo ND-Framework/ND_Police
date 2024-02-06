@@ -1,5 +1,4 @@
 local data_lockers = lib.load("data.locker_rooms")
-local clothes = {}
 
 local clothingComponents = {
     face = 0,
