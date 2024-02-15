@@ -74,7 +74,6 @@ end
 
 AddEventHandler("ND_Police:playerJustShot", function(weaponData)
     local ammo = weaponData?.ammo
-    print(ammo)
     return ammo and startPedShooting(ammo)
 end)
 
