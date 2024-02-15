@@ -30,11 +30,8 @@ local function disableShield()
     Wait(500)
     StopAnimTask(ped, "combat@gestures@gang@pistol_1h@beckon", "-180", 2.0)
     Wait(200)
-
     SetPlayerSprint(cache.playerId, true)
-    SetEnableHandcuffs(ped, false)
-    ox_inventory:disableWeaponCuffCheck(false)
-
+    
     LocalPlayer.state.blockHandsUp = false
     holdingShield = false
 
@@ -79,10 +76,7 @@ local function enableShield()
 
     AttachEntityToEntity(shield, ped, GetEntityBoneIndexByName(ped, "IK_L_Hand"), -0.05, -0.06, -0.09, -35.0, 180.0, 40.0, 0, 0, 1, 0, 0, 1)
     SetEntityNoCollisionEntity(ped, shield, false)
-
     SetPlayerSprint(cache.playerId, false)
-    SetEnableHandcuffs(ped, true)
-    ox_inventory:disableWeaponCuffCheck(true)
     
     CreateThread(function()
         while holdingShield do
