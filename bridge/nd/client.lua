@@ -25,7 +25,7 @@ function bridge.doesPlayerHaveJob(player, job)
 end
 
 
-AddEventHandler("ND:characterUnloaded", function()
+RegisterNetEvent("ND:characterUnloaded", function()
     TriggerEvent("ND_Police:playerUnloaded")
 end)
 
