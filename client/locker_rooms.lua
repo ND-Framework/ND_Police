@@ -39,6 +39,10 @@ local function setClothing(ped, clothing)
             SetPedPropIndex(ped, clothingProps[component], clothingInfo.drawable, clothingInfo.texture, true)
         end
     end
+
+    if GetResourceState("ND_AppearanceShops") == "started" then
+        TriggerServerEvent("ND_AppearanceShops:updateAppearance", exports["fivem-appearance"]:getPedAppearance(cache.ped))
+    end
 end
 
 local function getLockerOptions(lockerOptions, menu)
