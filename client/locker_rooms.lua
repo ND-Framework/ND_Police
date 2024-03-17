@@ -104,11 +104,11 @@ for locker, info in pairs(data_lockers) do
         })
 
         function point:onEnter()
-            self.canEnter = Bridge.hasGroup(info.groups)
+            info.canEnter = Bridge.hasGroup(info.groups)
         end
          
         function point:nearby()
-            if not self.canEnter then return end
+            if not info.canEnter then return end
 
             DrawMarker(
                 1, -- type
@@ -132,3 +132,13 @@ for locker, info in pairs(data_lockers) do
         end
     end
 end
+
+RegisterNetEvent("ND:updateCharacter", function(_, dataChanged)
+    if dataChanged ~= "groups" then return end
+    Wait(100)
+    for locker, info in pairs(data_lockers) do
+        for i=1, #info.locations do
+            info.canEnter = Bridge.hasGroup(info.groups)
+        end
+    end
+end)
