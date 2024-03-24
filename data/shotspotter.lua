@@ -1,7 +1,7 @@
 local shotspotter = {}
 
 shotspotter.debug = false -- if you set it to true you will see the shotspotters on map.
-shotspotter.delay = 10 -- delay for shotspotter to report a shooting.
+shotspotter.delay = 1 -- delay in seconds for shotspotter to report a shooting.
 shotspotter.cooldown = 120 -- seconds cooldown until player can trigger it again.
 shotspotter.radius = 550 -- how far the shotspotter will detect shots.
 
