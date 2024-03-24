@@ -10,14 +10,24 @@ menus["lspd"] = {
     },
     options = {
         {
-            title = "Patrol uniform",
+            title = "Patrol uniform (long sleeve)",
             groups = {"lspd"},
             clothing = options.lspd_patrol
         },
         {
-            title = "SWAT uniform",
-            groups = {"swat"},
-            clothing = options.lspd_swat
+            title = "Patrol uniform (short sleeve)",
+            groups = {"lspd"},
+            clothing = options.lspd_patrol2
+        },
+        {
+            title = "Patrol uniform (vest) (long sleeve)",
+            groups = {"lspd"},
+            clothing = options.lspd_patrol3
+        },
+        {
+            title = "Patrol uniform (vest) (short sleeve)",
+            groups = {"lspd"},
+            clothing = options.lspd_patrol4
         },
         {
             title = "K9 uniform",
@@ -25,10 +35,20 @@ menus["lspd"] = {
             clothing = options.lspd_canine
         },
         {
-            title = "Pilot uniform",
-            groups = {"police_pilot"},
-            clothing = options.lspd_pilot
-        }
+            title = "SWAT (black)",
+            groups = {"swat"},
+            clothing = options.lspd_swat
+        },
+        {
+            title = "SWAT (tan)",
+            groups = {"swat"},
+            clothing = options.lspd_swat2
+        },
+        {
+            title = "SWAT Pilot",
+            groups = {"swat"},
+            clothing = options.lspd_swat3
+        },
     }
 }
 
