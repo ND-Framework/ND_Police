@@ -26,24 +26,24 @@ return {
         }
     },
     ["cuffs"] = {
-        labal = "Handcuffs",
+        label = "Handcuffs",
         weight = 150,
         client = {
             export = "ND_Police.cuff"
         }
     },
     ["zipties"] = {
-        labal = "Zipties",
+        label = "Zipties",
         weight = 10,
         client = {
             export = "ND_Police.ziptie"
         }
     },
     ["tools"] = {
-		label = "Tools",
+	label = "Tools",
         description = "Can be used to hotwire vehicles.",
-		weight = 800,
-		consume = 1,
+	weight = 800,
+	consume = 1,
         stack = true,
         close = true,
 		client = {
