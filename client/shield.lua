@@ -1,3 +1,7 @@
+if not GetResourceState("ND_GunAnims"):find("start") then
+    return lib.print.warn("ND_GunAnims script not found, please install it or else the shield script won't work!")
+end
+
 local holdingShield = false
 local shield = nil
 local ox_inventory = exports.ox_inventory
