@@ -2,26 +2,85 @@ if not GetResourceState("ND_GunAnims"):find("start") then
     return lib.print.warn("ND_GunAnims script not found, please install it or else the shield script won't work!")
 end
 
+local gunAnim = nil
 local holdingShield = false
 local shield = nil
 local ox_inventory = exports.ox_inventory
+local createdProps = {}
+local shieldPositions = {
+    onBack = {
+        bone = 38,
+        pos = vec3(0.0, -0.25, 0.0),
+        rot = vec3(-10.0, 90.0, 0.0),
+        rotationOrder = 1
+    },
+    inUse = {
+        bone = 62,
+        pos = vec3(-0.05, -0.06, -0.09),
+        rot = vec3(-35.0, 180.0, 40.0),
+        rotationOrder = 0
+    }
+}
 
-local function shieldOnBack(status)
-    if not status then
-        SetPlayerSprint(cache.playerId, true)
-        return DoesEntityExist(shield) and DeleteEntity(shield)
+local function createProp(ped, bone, pos, rot, rotationOrder)
+    local model = `prop_ballistic_shield`
+    lib.requestModel(model)
+
+    local coords = GetEntityCoords(ped)
+    local object = CreateObject(model, coords.x, coords.y, coords.z, false, false, false)
+
+    AttachEntityToEntity(object, ped, bone, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, false, false, true, true, rotationOrder, true)
+    SetModelAsNoLongerNeeded(model)
+    SetEntityNoCollisionEntity(ped, object, false)
+    SetEntityCollision(object, false, true)
+
+    return object
+end
+
+local function deleteAttachedProps(serverId)
+    local playerProps = createdProps[serverId]
+    if not playerProps then return end
+    for i = 1, #playerProps do
+        local prop = playerProps[i]
+        if DoesEntityExist(prop) then
+            DeleteEntity(prop)
+        end
+    end
+    createdProps[serverId] = nil
+end
+
+RegisterNetEvent("onPlayerDropped", function(serverId)
+    deleteAttachedProps(serverId)
+end)
+
+AddStateBagChangeHandler("ND_Police:hasShield", nil, function(bagName, key, value, reserved, replicated)
+    if replicated then return end
+
+    local ply = GetPlayerFromStateBagName(bagName)
+    if ply == 0 then return end
+
+    local ped = GetPlayerPed(ply)
+    local serverId = GetPlayerServerId(ply)
+    
+    if not value then
+        return deleteAttachedProps(serverId)
     end
     
-    local ped = cache.ped
-    local coords = GetEntityCoords(ped)
+    createdProps[serverId] = {}
+    local playerProps = createdProps[serverId]
+    playerProps[#playerProps+1] = createProp(ped, value.bone, value.pos, value.rot, value.rotationOrder)
+end)
 
-    lib.requestModel(`prop_ballistic_shield`)
-    shield = CreateObject(`prop_ballistic_shield`, coords.x, coords.y, coords.z, true, false, false)
-    while not DoesEntityExist(shield) do Wait(0) end
+local function shieldOnBack(status)
+    local state = LocalPlayer.state
+    state:set("ND_Police:hasShield", status and shieldPositions.onBack, true)
+    SetPlayerSprint(cache.playerId, not status)
+end
 
-    AttachEntityToEntity(shield, ped, GetPedBoneIndex(ped, 0x60F2), 0.0, -0.25, 0.0, -10.0, 90.0, 0.0, true, true, false, true, 1, true)
-    SetEntityNoCollisionEntity(ped, shield, false)
-    SetPlayerSprint(cache.playerId, false)
+local function shieldInUse(status)
+    local state = LocalPlayer.state
+    state:set("ND_Police:hasShield", status and shieldPositions.inUse, true)
+    SetPlayerSprint(cache.playerId, not status)
 end
 
 local function disableShield()
@@ -38,10 +97,7 @@ local function disableShield()
     
     LocalPlayer.state.blockHandsUp = false
     holdingShield = false
-
-    if DoesEntityExist(shield) then
-        DeleteEntity(shield)
-    end
+    shieldInUse(false)
 
     SetTimeout(50, function()
         ClearPedTasks(ped)
@@ -73,14 +129,7 @@ local function enableShield()
     TaskPlayAnim(ped, "combat@gestures@gang@pistol_1h@beckon", "-90", 8.0, -8.0, -1, 50, 0.0, false, false, false)
     Wait(600)
     shieldOnBack(false)
-    
-    lib.requestModel(`prop_ballistic_shield`)
-    shield = CreateObject(`prop_ballistic_shield`, coords.x, coords.y, coords.z, true, false, false)
-    while not DoesEntityExist(shield) do Wait(0) end
-
-    AttachEntityToEntity(shield, ped, GetEntityBoneIndexByName(ped, "IK_L_Hand"), -0.05, -0.06, -0.09, -35.0, 180.0, 40.0, 0, 0, 1, 0, 0, 1)
-    SetEntityNoCollisionEntity(ped, shield, false)
-    SetPlayerSprint(cache.playerId, false)
+    shieldInUse(true)
     
     CreateThread(function()
         while holdingShield do
