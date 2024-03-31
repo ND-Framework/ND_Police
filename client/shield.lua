@@ -95,6 +95,10 @@ local function disableShield()
     Wait(200)
     SetPlayerSprint(cache.playerId, true)
     
+    if gunAnim then
+        exports["ND_GunAnims"]:setAimAnim("default")
+    end
+
     LocalPlayer.state.blockHandsUp = false
     holdingShield = false
     shieldInUse(false)
@@ -120,6 +124,9 @@ local function enableShield()
             type = "inform"
         })
     end
+
+    gunAnim = exports["ND_GunAnims"]:getAimAnim()
+    exports["ND_GunAnims"]:setAimAnim("gang")
 
     LocalPlayer.state.blockHandsUp = true
     holdingShield = true
