@@ -32,7 +32,7 @@ local function nearbySeatVehicleCheck(ped)
     lastNearbySeatCheck = time
 
     local coords = GetEntityCoords(ped)
-    local veh = lib.getClosestVehicle(coords, 2.0)
+    local veh = lib.getClosestVehicle(coords, 4.0, true)
     nearBySeatStatus = DoesEntityExist(veh) and AreAnyVehicleSeatsFree(veh) and GetVehicleDoorLockStatus(veh) ~= 2
 
     return nearBySeatStatus
@@ -74,7 +74,7 @@ exports.ox_target:addGlobalPlayer({
         end,
         onSelect = function(data)
             local coords = GetEntityCoords(cache.ped)
-            local veh = lib.getClosestVehicle(coords, 2.0)
+            local veh = lib.getClosestVehicle(coords, 4.0, true)
             if not DoesEntityExist(veh) or not AreAnyVehicleSeatsFree(veh) then return end
 
             local bones = {"seat_dside_r", "seat_pside_r"}
