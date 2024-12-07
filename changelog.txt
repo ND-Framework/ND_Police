@@ -1,0 +1,17 @@
+basically I removed all the old cuff systems and changed it to my own so no cuffs are needed in your inventory also added the search function to be able to take stuff from player 
+
+but they have to accept it or denied it 
+
+I have my job as Job:Police can use cuffs 
+
+you may have to go into server file 
+
+then cuffs.lua 
+
+line 7 
+
+change police job to what ever job you have 
+
+
+
+

@@ -34,7 +34,7 @@ server_scripts {
 client_scripts {
     'client/main.lua',
     'client/cuff.lua',
-    'client/escort.lua',
+    --'client/escort.lua',
     'client/evidence.lua',
     'client/gsr.lua',
     'client/spikes.lua',
