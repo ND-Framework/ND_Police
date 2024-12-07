@@ -23,6 +23,10 @@
 
 Everything from ox_police has been completely rewritten besides `client/evidence.lua`, `client/spikes.lua`, and `client/escort.lua` which have minimal changes from the original ox_police.
 
+
+
+
+IMPORTANT!!
 [cuffs]
 
 make sure you go to server file then cuff.lua 
