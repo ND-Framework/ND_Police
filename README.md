@@ -23,6 +23,11 @@
 
 Everything from ox_police has been completely rewritten besides `client/evidence.lua`, `client/spikes.lua`, and `client/escort.lua` which have minimal changes from the original ox_police.
 
+[cuffs]
+
+make sure you go to server.lua 
+line 7 and change your job to the one you want (I've got mine as police so just change that to what ever you have)
+
 ## Notes
 - Evidence lockers and armories are handled by ox_inventory.
 - If you're using NDCore you can create garages for police in `client/vehicle/data`.
