@@ -36,28 +36,9 @@ If you want to PR a feature, you should ask first (so you won't waste time).
 
 **Hands up:**
 * Keybind that can be changed in the pause menu settings (default: X).
-* Click once to put hands up.
-* Hold for ~3 seconds to put hands up and kneel.
 * Click once to cancel.
-* search players when cuffed or hands up
+* search players when cuffed 
 
-**Cuffs/zipties:**
-* Unique zipties & cuffs props.
-* Unique zipties & cuff sounds for both applying and removing them.
-* Animation for normal cuffing & aggressive cuffing.
-* Normal cuffing occurs when a player has their hands up standing.
-* Aggressive cuffing occurs when the player has their hands up and kneeling, or when not having their hands up at all.
-* Cuffs can be used when hands are not up, zipties require player to have hands up.
-* Front & back cuff/ziptie animations for normal cuffing.
-* Aggressive cuffing will prompt the target player with a minigame; if they complete it, they cancel the cuffing animation and can run away.
-* Uncuffing requires `handcuffkey` items, and cutting zipties requires `tools` items, which is also used for hot-wiring in NDCore.
-
-**Escort/drag:**
-* Players can only be dragged when cuffed/ziptied.
-* Person dragging will play an animation holding the player being dragged.
-* Person being dragged will have their legs animated when the dragging player walks/runs.
-* Uncuffing/removing zipties will release the player from being dragged.
-* put player in vehicle
 
 **Evidence:**
 * Shooting will drop ammo casings on the ground around the player.
