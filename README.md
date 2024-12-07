@@ -25,7 +25,7 @@ Everything from ox_police has been completely rewritten besides `client/evidence
 
 [cuffs]
 
-make sure you go to server.lua 
+make sure you go to server file then cuff.lua 
 line 7 and change your job to the one you want (I've got mine as police so just change that to what ever you have)
 
 ## Notes
