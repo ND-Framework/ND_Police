@@ -1,0 +1,4 @@
+basically I removed all the old cuff systems and changed it to my own so no cuffs are needed in your inventory also added the search function to be able to take stuff from player 
+
+but they have to accept it or denied it 
+
