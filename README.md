@@ -1,8 +1,9 @@
 Updated:
 
-fixes: the cuffs not working
-removed: the cuffs in your invtory 
-updated: the ability to search people and take the items from there inventory 
+fixes: the cuffs not working.
+removed: the cuffs in your inventory.
+
+updated: the ability to search people and take the items from their inventory.
 
 
 any problems
