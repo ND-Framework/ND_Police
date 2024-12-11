@@ -13,7 +13,7 @@ function toggleHandsUp()
     
     -- Check if the player is inside a vehicle
     if IsPedInAnyVehicle(playerPed, false) then
-        print("[DEBUG] Player is in a vehicle. Hands-up action not allowed.")
+        
         return
     end
 
@@ -21,7 +21,7 @@ function toggleHandsUp()
         -- If hands are currently up, lower them
         ClearPedTasksImmediately(playerPed)
         handsUp = false
-        print("[DEBUG] Hands lowered.")
+        
     else
         -- If hands are down, raise them
         RequestAnimDict("random@mugging3")
@@ -31,7 +31,7 @@ function toggleHandsUp()
 
         TaskPlayAnim(playerPed, "random@mugging3", "handsup_standing_base", 8.0, -8.0, -1, 49, 0, 0, 0, 0)
         handsUp = true
-        print("[DEBUG] Hands raised.")
+        
     end
 end
 
