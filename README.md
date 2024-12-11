@@ -1,3 +1,19 @@
+Updated:
+
+fixes: the cuffs not working
+removed: the cuffs in your invtory 
+updated: the ability to search people and take the items from there inventory 
+
+
+any problems
+DISCORD ME:https://discord.gg/dDajKrE5
+
+
+
+
+
+
+
 <p  align="center">
     <a href="https://ndcore.dev" target="_blank">
         <img src="https://github.com/Testaross/ND_Police/assets/86536434/f8ab5177-c317-41f2-a35a-92d2a7b39ce5" width="40%" />
