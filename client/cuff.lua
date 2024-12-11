@@ -8,23 +8,34 @@ function isPlayerCuffed()
     return isCuffed
 end
 
--- Function to toggle hands-up animation
 function toggleHandsUp()
     local playerPed = PlayerPedId()
+    
+    -- Check if the player is inside a vehicle
+    if IsPedInAnyVehicle(playerPed, false) then
+        print("[DEBUG] Player is in a vehicle. Hands-up action not allowed.")
+        return
+    end
+
     if handsUp then
         -- If hands are currently up, lower them
         ClearPedTasksImmediately(playerPed)
         handsUp = false
+        print("[DEBUG] Hands lowered.")
     else
         -- If hands are down, raise them
         RequestAnimDict("random@mugging3")
         while not HasAnimDictLoaded("random@mugging3") do
             Citizen.Wait(0)
         end
+
         TaskPlayAnim(playerPed, "random@mugging3", "handsup_standing_base", 8.0, -8.0, -1, 49, 0, 0, 0, 0)
         handsUp = true
+        print("[DEBUG] Hands raised.")
     end
 end
+
+
 
 Citizen.CreateThread(function()
     while true do
