@@ -7,7 +7,7 @@ updated: the ability to search people and take the items from their inventory.
 
 
 any problems
-DISCORD ME:https://discord.gg/dDajKrE5
+DISCORD ME:  [https://discord.gg/VHDbgpnBbR]
 
 
 
