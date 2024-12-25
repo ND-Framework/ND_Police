@@ -2,7 +2,8 @@ return {
     policeGroups = {
         "lspd",
         "sahp",
-        "bcso"
+        "bcso",
+        "police" -- police > lspd
     },
 
     clearGSR = 15, -- time in minutes
