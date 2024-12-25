@@ -30,10 +30,12 @@ function bridge.hasJobs(src, groups)
 end
 
 function bridge.impoundVehicle(netId, entity, impoundReclaimPrice)
-    local vehicle = NDCore.getVehicle(entity)
-    if not vehicle then return end
-    vehicle.setMetadata("impoundReclaimPrice", impoundReclaimPrice)
-    vehicle.setStatus("impounded", true)
+    local vehicle = Ox.GetVehicle(entity)
+    if not vehicle then 
+        print("Didn't find vehicle")
+        return end
+    vehicle.set("impoundReclaimPrice", impoundReclaimPrice)
+    vehicle.setStored("impound", true)
 end
 
 return bridge
