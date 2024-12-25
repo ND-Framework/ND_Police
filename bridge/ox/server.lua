@@ -31,9 +31,7 @@ end
 
 function bridge.impoundVehicle(netId, entity, impoundReclaimPrice)
     local vehicle = Ox.GetVehicle(entity)
-    if not vehicle then 
-        print("Didn't find vehicle")
-        return end
+    if not vehicle then return end
     vehicle.set("impoundReclaimPrice", impoundReclaimPrice)
     vehicle.setStored("impound", true)
 end
