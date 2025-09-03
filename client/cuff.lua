@@ -80,7 +80,7 @@ end
 
 local function toggleHandsUp(status, animType)
     local state = Player(cache.serverId).state
-    if state.gettingCuffed or state.isCuffed or state.isCuffing then return end 
+    if state.gettingCuffed or state.isCuffed or state.isCuffing or state.isInEmote then return end 
 
     if npwd then
         exports.npwd:setPhoneDisabled(status)
