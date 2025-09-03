@@ -1,6 +1,7 @@
 local playerState = LocalPlayer.state
 local lastNearbySeatCheck = 0
 local nearBySeatStatus = false
+local openingDoor = false
 
 local IsPedCuffed = IsPedCuffed
 local IsEntityAttachedToEntity = IsEntityAttachedToEntity
@@ -11,16 +12,19 @@ function StopEscortPlayer(serverId, setIntoVeh, setIntoSeat)
     StopAnimTask(cache.ped, "amb@world_human_drinking@coffee@female@base", "base", 2.0)
 end
 
-local function escortPlayer(ped, id)
+local function escortPlayer(ped, id, onlyAnim, exitVeh)
     lib.requestAnimDict("amb@world_human_drinking@coffee@female@base")
     TaskPlayAnim(cache.ped, "amb@world_human_drinking@coffee@female@base", "base", 8.0, 8.0, -1, 50, 0, false, false, false)
+
+    if onlyAnim then return end
+
     LocalPlayer.state.blockHandsUp = true
 
     if not id then
         id = NetworkGetPlayerIndexFromPed(ped)
     end
 
-    TriggerServerEvent('ND_Police:setPlayerEscort', GetPlayerServerId(id), not IsEntityAttachedToEntity(ped, cache.ped))
+    TriggerServerEvent('ND_Police:setPlayerEscort', GetPlayerServerId(id), not IsEntityAttachedToEntity(ped, cache.ped), false, false, exitVeh)
 end
 
 local function nearbySeatVehicleCheck(ped)
@@ -37,6 +41,58 @@ local function nearbySeatVehicleCheck(ped)
 
     return nearBySeatStatus
 end
+
+AddEventHandler('CEventOpenDoor', function()
+    if not LocalPlayer.state.blockHandsUp then return end -- if not escorting
+
+    if openingDoor then return end
+    openingDoor = true
+
+    while IsPedOpeningADoor(cache.ped) do
+        Wait(100)
+    end
+
+    openingDoor = false
+
+    if LocalPlayer.state.blockHandsUp then
+        escortPlayer(cache.ped, nil, true) -- restart anim
+    end
+end)
+
+exports.ox_target:addGlobalVehicle({
+    {
+        name = "ND_Police:vehicleEscortExitPassenger",
+        icon = "fa-solid fa-right-from-bracket",
+        label = "Take out from vehicle",
+        distance = 1.5,
+        bones = {"seat_dside_r"},
+        canInteract = function(entity)
+            local ped = GetPedInVehicleSeat(entity, 3)
+            return DoesEntityExist(ped) and IsPedCuffed(ped) and not playerState.invBusy
+        end,
+        onSelect = function(data)
+            local ped = GetPedInVehicleSeat(data.entity, 3)
+            if not DoesEntityExist(ped) then return end
+            escortPlayer(ped, nil, false, true)
+        end
+    },
+    {
+        name = "ND_Police:vehicleEscortExitDriver",
+        icon = "fa-solid fa-right-from-bracket",
+        label = "Take out from vehicle",
+        distance = 1.5,
+        bones = {"seat_pside_r"},
+        canInteract = function(entity)
+            local ped = GetPedInVehicleSeat(entity, 2)
+            return DoesEntityExist(ped) and IsPedCuffed(ped) and not playerState.invBusy
+        end,
+        onSelect = function(data)
+            local ped = GetPedInVehicleSeat(data.entity, 2)
+            if not DoesEntityExist(ped) then return end
+            escortPlayer(ped, nil, false, true)
+        end
+    }
+})
 
 exports.ox_target:addGlobalPlayer({
     {

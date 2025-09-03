@@ -43,15 +43,19 @@ RegisterServerEvent('ND_Police:retrieveSpikestrip', function(netId)
     Ox_inventory:AddItem(source, 'spikestrip', 1)
 end)
 
-RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state, setIntoVeh, setIntoSeat)
+RegisterServerEvent('ND_Police:setPlayerEscort', function(target, state, setIntoVeh, setIntoSeat, exitVeh)
     local src = source
     target = tonumber(target)
-    if not target then return end
+    if not target or target == 0 then return end
 
     local playerCoords = GetEntityCoords(GetPlayerPed(src))
     local targetPed = GetPlayerPed(target)
     local targetCoords = GetEntityCoords(targetPed)
-    if not playerCoords or not targetCoords or #(playerCoords-targetCoords) > 5 then return end
+    if not playerCoords or not targetCoords or #(playerCoords-targetCoords) > 10 then return end
+    
+    if exitVeh then
+        SetEntityCoords(targetPed, playerCoords.x, playerCoords.y, playerCoords.z)
+    end
 
     target = Player(target)?.state
     
