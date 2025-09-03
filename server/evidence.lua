@@ -4,8 +4,8 @@ local clearEvidence = {}
 local evidenceMetadata = lib.load("data.evidence")
 
 local bulletText = {
-    projectile = "Projectile from ",
-    casing = "Casing from "
+    projectile = locale("projectile_from"),
+    casing = locale("casing_from"),
 }
 
 Ox_inventory:registerHook('createItem', function(payload)
@@ -21,7 +21,7 @@ Ox_inventory:registerHook('createItem', function(payload)
     if not image then return end
     
     return {
-        label = text .. evidence.label,
+        label = text:format(evidence.label),
         weight = evidence.weight,
         image = image
     }
@@ -86,5 +86,5 @@ RegisterServerEvent('ND_Police:collectEvidence', function(nodes)
     end
 
     if not success then return end
-    lib.notify(source, {type = 'success', title = 'Evidence collected'})
+    lib.notify(source, {type = 'success', title = locale("evidence_collected")})
 end)

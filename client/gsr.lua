@@ -19,7 +19,7 @@ local function checkGsr(state)
         ResetPedVisibleDamage(ped)
         lib.notify({
             type = 'inform',
-            description = 'GSR Washed off'
+            description = locale("gsr_washed_off")
         })
         state:set('shot', false, true)
     end
@@ -27,7 +27,7 @@ local function checkGsr(state)
     if time-lastShot > (Config.clearGSR*60) then
         lib.notify({
             type = 'inform',
-            description = 'GSR has faded'
+            description = locale("gsr_worn_off")
         })
         state:set('shot', false, true)
     end
@@ -44,7 +44,7 @@ end)
 exports.ox_target:addGlobalPlayer({
     {
         icon = 'fa-solid fa-gun',
-        label = 'GSR Test',
+        label = locale("gsr_test"),
         groups = Config.policeGroups,
 	    distance = 1.5,
         onSelect = function(data)

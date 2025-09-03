@@ -1,3 +1,5 @@
+lib.locale()
+
 local bridgeResources = {
     ["ND_Core"] = "nd",
     ["ox_core"] = "ox",

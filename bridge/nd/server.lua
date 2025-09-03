@@ -12,7 +12,7 @@ function bridge.shotSpotter(src, location, coords)
 
     exports["ND_MDT"]:createDispatch({
         location = location,
-        callDescription = "Shotspotter detected gunshot",
+        callDescription = locale("shot_spotter_alert"),
         coords = coords
     })
 end

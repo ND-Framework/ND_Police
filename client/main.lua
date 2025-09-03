@@ -28,16 +28,16 @@ end)
 exports.ox_target:addGlobalVehicle({
     {
         icon = "fa-solid fa-car-side",
-        label = "Impound vehicle",
+        label = locale("impound_vehicle"),
         groups = Config.policeGroups,
 	    distance = 1.5,
         onSelect = function(data)
-            local input = lib.inputDialog("Impound vehicle", {
+            local input = lib.inputDialog(locale("impound_vehicle"), {
                 {
                     type = "number",
-                    label = "Impound reclaim price",
-                    description = "How much does the owner have to pay to reclaim the vehicle from the impound?",
-                    icon = "dollar-sign",
+                    label = locale("impound_reclaim_price"),
+                    description = locale("impound_reclaim_price_description"),
+                    icon = "money-check",
                     min = Config.minImpoundPrice,
                     max = Config.maxImpoundPrice,
                     default = Config.defaultImpoundPrice
@@ -48,8 +48,8 @@ exports.ox_target:addGlobalVehicle({
             if not impoundReclaimPrice then return end
 
             local alert = lib.alertDialog({
-                header = "Impound vehicle",
-                content = ("Vehicle will be deleted and if it's owned by a player, they will be able to pick it up at the impound for $%s."):format(impoundReclaimPrice),
+                header = locale("impound_vehicle"),
+                content = locale("impound_vehicle_alert", impoundReclaimPrice),
                 centered = true,
                 cancel = true
             })

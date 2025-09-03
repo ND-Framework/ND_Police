@@ -7,7 +7,8 @@ files {
     "audiodata/nd_police.dat54.rel",
     "audiodirectory/nd_police.awc",
     "data/**",
-    "bridge/**/client.lua"
+    "bridge/**/client.lua",
+    "locales/*.json"
 }
 
 data_file "DLC_ITYP_REQUEST" "stream/cuffs_main.ytyp"

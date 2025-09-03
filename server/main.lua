@@ -78,13 +78,13 @@ RegisterNetEvent('ND_Police:gsrTest', function(target)
     if state.shot then
         return Bridge.notify(src, {
             type = 'success',
-            description = 'Test comes back POSITIVE (Has Shot)'
+            description = locale("gsr_positive")
         })
     end
 
     Bridge.notify(src, {
         type = 'error',
-        description = 'Test comes back NEGATIVE (Has Not Shot)'
+        description = locale("gsr_negative")
     })
 end)
 
@@ -99,14 +99,14 @@ RegisterNetEvent("ND_Police:impoundVehicle", function(netId, impoundReclaimPrice
     if not impoundReclaimPrice or impoundReclaimPrice > config.maxImpoundPrice or impoundReclaimPrice < config.minImpoundPrice then
         return Bridge.notify({
             type = "error",
-            description = "Invalid impound reclaim price."
+            description = locale("invalid_impound_price")
         })
     end
 
     if not Bridge.hasJobs(src, config.policeGroups) then
         return Bridge.notify({
             type = "error",
-            description = "You don't have permission to do this."
+            description = locale("no_perms_impound")
         })
     end
 
@@ -115,7 +115,7 @@ RegisterNetEvent("ND_Police:impoundVehicle", function(netId, impoundReclaimPrice
     if not DoesEntityExist(vehicle) then
         return Bridge.notify({
             type = "error",
-            description = "Vehicle was not found, try again later."
+            description = locale("veh_not_found_try_again")
         })
     end
 
@@ -125,7 +125,7 @@ RegisterNetEvent("ND_Police:impoundVehicle", function(netId, impoundReclaimPrice
     if #(vehCoords-pedCoords) > 5 then
         return Bridge.notify({
             type = "error",
-            description = "You're too far away from the vehicle."
+            description = locale("too_far_from_veh")
         })
     end
     

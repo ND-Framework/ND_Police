@@ -50,7 +50,7 @@ local function getLockerOptions(lockerOptions, menu)
 
     if GetResourceState("ND_AppearanceShops") == "started" then
         options[#options+1] = {
-            title = "View saved outfits",
+            title = locale("view_saved_outfits"),
             icon = "fa-solid fa-shirt",
             onSelect = function()
                 exports["ND_AppearanceShops"]:openWardrobe(menu)
@@ -69,8 +69,8 @@ local function getLockerOptions(lockerOptions, menu)
                 local model = GetEntityModel(ped)
                 if model ~= `mp_m_freemode_01` and model ~= `mp_f_freemode_01` then
                     return Bridge.notify({
-                        title = "Unable to set otufit",
-                        description = "Your player model is not supported.",
+                        title = locale("unable_to_set_outfit"),
+                        description = locale("unsupported_player_model"),
                         type = "error",
                         duration = 5000
                     })
@@ -79,8 +79,8 @@ local function getLockerOptions(lockerOptions, menu)
                 local clothing = opt.clothing[model == `mp_m_freemode_01` and "male" or "female"]
                 if not clothing then
                     return Bridge.notify({
-                        title = "Unable to set otufit",
-                        description = "Your player model is not supported.",
+                        title = locale("unable_to_set_outfit"),
+                        description = locale("unsupported_player_model"),
                         type = "error",
                         duration = 5000
                     })

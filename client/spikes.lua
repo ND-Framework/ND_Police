@@ -1,11 +1,11 @@
 exports.ox_target:addModel('p_ld_stinger_s', {
     {
         icon = 'fa-solid fa-lock',
-        label = 'Pick up spike strip',
+        label = locale("pick_up_spikes"),
         onSelect = function(data)
             if lib.progressBar({
                 duration = 1500,
-                label = 'Picking up spike strips',
+                label = locale("picking_up_spikes"),
                 useWhileDead = false,
                 canCancel = true,
                 disable = {
@@ -27,7 +27,7 @@ local glm = require 'glm'
 
 exports('deploySpikestrip', function()
     if cache.vehicle then
-        lib.notify({title = 'Cannot deploy a spikestrip while in a vehicle', type = 'error'})
+        lib.notify({title = locale("cannot_deploy_spikes_in_veh"), type = 'error'})
         return
     end
 
@@ -47,7 +47,7 @@ exports('deploySpikestrip', function()
             if i == 4 then break end
         end
 
-        size = lib.inputDialog('Deploy Spikestrip', {
+        size = lib.inputDialog(locale("deploy_spikes"), {
             { type = 'select', label = 'Size', options = options }
         })
 
@@ -60,7 +60,7 @@ exports('deploySpikestrip', function()
 
     if lib.progressBar({
         duration = 1000 * size,
-        label = 'Placing Spikestrip',
+        label = locale("placing_spikes"),
         useWhileDead = false,
         canCancel = true,
         disable = {

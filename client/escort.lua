@@ -59,37 +59,42 @@ AddEventHandler('CEventOpenDoor', function()
     end
 end)
 
+local function canInteractRemoveFromVeh(entity, seat)
+    local ped = GetPedInVehicleSeat(entity, seat)
+    return DoesEntityExist(ped) and IsPedCuffed(ped) and not playerState.invBusy
+end
+
+local function onSelectRemoveFromVeh(entity, seat)
+    local ped = GetPedInVehicleSeat(entity, seat)
+    if not DoesEntityExist(ped) then return end
+    escortPlayer(ped, nil, false, true)
+end
+
 exports.ox_target:addGlobalVehicle({
     {
         name = "ND_Police:vehicleEscortExitPassenger",
         icon = "fa-solid fa-right-from-bracket",
-        label = "Take out from vehicle",
+        label = locale("take_out_from_vehicle"),
         distance = 1.5,
         bones = {"seat_dside_r"},
         canInteract = function(entity)
-            local ped = GetPedInVehicleSeat(entity, 3)
-            return DoesEntityExist(ped) and IsPedCuffed(ped) and not playerState.invBusy
+            return canInteractRemoveFromVeh(entity, 3)
         end,
         onSelect = function(data)
-            local ped = GetPedInVehicleSeat(data.entity, 3)
-            if not DoesEntityExist(ped) then return end
-            escortPlayer(ped, nil, false, true)
+            onSelectRemoveFromVeh(data.entity, 3)
         end
     },
     {
         name = "ND_Police:vehicleEscortExitDriver",
         icon = "fa-solid fa-right-from-bracket",
-        label = "Take out from vehicle",
+        label = locale("take_out_from_vehicle"),
         distance = 1.5,
         bones = {"seat_pside_r"},
         canInteract = function(entity)
-            local ped = GetPedInVehicleSeat(entity, 2)
-            return DoesEntityExist(ped) and IsPedCuffed(ped) and not playerState.invBusy
+            return canInteractRemoveFromVeh(entity, 2)
         end,
         onSelect = function(data)
-            local ped = GetPedInVehicleSeat(data.entity, 2)
-            if not DoesEntityExist(ped) then return end
-            escortPlayer(ped, nil, false, true)
+            onSelectRemoveFromVeh(data.entity, 2)
         end
     }
 })
@@ -98,7 +103,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = 'escort',
         icon = 'fas fa-hands-bound',
-        label = 'Escort',
+        label = locale("escort_player"),
         distance = 1.5,
         canInteract = function(entity)
             return IsPedCuffed(entity) and not IsEntityAttachedToEntity(entity, cache.ped) and not playerState.invBusy
@@ -110,7 +115,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = 'release',
         icon = 'fas fa-hands-bound',
-        label = 'Release',
+        label = locale("release_player"),
         distance = 1.5,
         canInteract = function(entity)
             return IsPedCuffed(entity) and IsEntityAttachedToEntity(entity, cache.ped) and not playerState.invBusy
@@ -122,7 +127,7 @@ exports.ox_target:addGlobalPlayer({
     {
         name = "ND_Police:vehicleEscort",
         icon = "fa-solid fa-right-to-bracket",
-        label = "Place in vehicle",
+        label = locale("place_in_vehicle"),
         distance = 1.5,
         canInteract = function(entity)
             local ped = cache.ped

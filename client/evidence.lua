@@ -100,7 +100,7 @@ RegisterNetEvent('ND_Police:updateEvidence', function(addEvidence, clearEvidence
                     {
                         name = ('evidence_%s'):format(coords),
                         icon = 'fa-solid fa-magnifying-glass',
-                        label = 'Collect evidence',
+                        label = locale("collect_evidence"),
                         offsetSize = 1 / 2 ^ 3,
                         absoluteOffset = true,
                         offset = coords.w and coords.xyz,
