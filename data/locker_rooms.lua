@@ -4,29 +4,29 @@ local menus = {}
 
 menus["lspd"] = {
     title = "Locker room",
-    groups = {"lspd"},
+    groups = {"lspd", "police"},
     locations = {
         vec3(458.14, -990.82, 30.69)
     },
     options = {
         {
             title = "Patrol uniform (long sleeve)",
-            groups = {"lspd"},
+            groups = {"lspd", "police"},
             clothing = options.lspd_patrol
         },
         {
             title = "Patrol uniform (short sleeve)",
-            groups = {"lspd"},
+            groups = {"lspd", "police"},
             clothing = options.lspd_patrol2
         },
         {
             title = "Patrol uniform (vest) (long sleeve)",
-            groups = {"lspd"},
+            groups = {"lspd", "police"},
             clothing = options.lspd_patrol3
         },
         {
             title = "Patrol uniform (vest) (short sleeve)",
-            groups = {"lspd"},
+            groups = {"lspd", "police"},
             clothing = options.lspd_patrol4
         },
         {
